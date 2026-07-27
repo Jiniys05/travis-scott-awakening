@@ -1,215 +1,154 @@
 const colorways = [
     {
         name: "SAIL PINK",
-        code: "CW-01",
+        code: "STUDY 01",
         tag: "SOFT SAIL / PINK NUBUCK",
-        note: "Самая чистая пара для главного кадра: светлая кожа, мягкий pink и архивная подошва.",
+        note: "The lightest reading of the silhouette: off-white leather, a quiet pink field and an archive sole.",
         image: "assets/colorways/pink-pack-sail.png"
     },
     {
         name: "ROSE BROWN",
-        code: "CW-02",
+        code: "STUDY 02",
         tag: "DUSTY ROSE / EARTH SWOOSH",
-        note: "Ближе к Travis-коду: розовый уходит в земляной тон, Swoosh становится тяжелее.",
+        note: "A more grounded study: pink gives way to earth tones while the Swoosh carries the visual weight.",
         image: "assets/colorways/pink-pack-rose-brown.png"
     },
     {
         name: "DUST PHASE",
-        code: "CW-03",
+        code: "STUDY 03",
         tag: "MUTED PINK / GREY SWOOSH",
-        note: "Пыльный вариант, который лучше всего дружит с analog grain и темным фоном.",
+        note: "A subdued option designed to sit naturally with analog grain, soft flash and a dark environment.",
         image: "assets/colorways/pink-pack-dust.png"
     },
     {
         name: "HOT PINK",
-        code: "CW-04",
+        code: "STUDY 04",
         tag: "TONAL MAGENTA / WHITE SOLE",
-        note: "Самый агрессивный pink: почти монохром, больше энергии, меньше архивности.",
+        note: "The highest-energy study: tonal magenta compresses the palette and brings the material forward.",
         image: "assets/colorways/pink-pack-hot-pink.png"
     },
     {
         name: "MINT SHIFT",
-        code: "CW-05",
+        code: "STUDY 05",
         tag: "CORAL PINK / MINT SWOOSH",
-        note: "Контрастный tropical-вектор: мягкий коралл против холодного mint.",
+        note: "A cold counterpoint to coral: the mint Swoosh changes the temperature without changing the form.",
         image: "assets/colorways/pink-pack-mint.png"
     },
     {
         name: "RED STRIKE",
-        code: "CW-06",
+        code: "STUDY 06",
         tag: "PALE PINK / RED SWOOSH",
-        note: "Самый прямой visual hit: красный Swoosh держит карточку даже в малом размере.",
+        note: "A direct red hit holds the composition even when the product is reduced to a small frame.",
         image: "assets/colorways/pink-pack-red.png"
     }
 ];
 
-function fallbackRender(root) {
-    root.innerHTML = `
-        <div class="colorway-gallery">
-            <article class="colorway-feature">
-                <div class="feature-image-wrap">
-                    <img src="${colorways[0].image}" alt="Travis Scott Air Jordan 1 Low ${colorways[0].name}">
-                </div>
-                <div class="feature-copy">
-                    <span>${colorways[0].code} / FEATURED MODEL</span>
-                    <h3>${colorways[0].name}</h3>
-                    <p>${colorways[0].note}</p>
-                </div>
-            </article>
-            <div class="colorway-stack">
-                ${colorways.map((item, index) => `
-                    <button class="shoe-item is-framer-motion${index === 0 ? " is-active" : ""}" type="button" style="--tilt:${index % 2 === 0 ? "-2deg" : "2deg"}">
-                        <span class="shoe-index">${item.code}</span>
-                        <div class="shoe-frame">
-                            <img src="${item.image}" alt="Travis Scott Air Jordan 1 Low ${item.name}" loading="lazy" decoding="async">
-                        </div>
-                        <span class="shoe-label"><span>${item.tag}</span>${item.name}</span>
-                    </button>
-                `).join("")}
-            </div>
-        </div>
+function cardMarkup(item, index) {
+    return `
+        <button class="shoe-item${index === 0 ? " is-active" : ""}" type="button" data-index="${index}" aria-pressed="${index === 0}">
+            <span class="shoe-index">${item.code}</span>
+            <span class="shoe-frame">
+                <img src="${item.image}" alt="Visual study: Air Jordan 1 Low ${item.name}" loading="lazy" decoding="async">
+            </span>
+            <span class="shoe-label"><span>${item.tag}</span>${item.name}</span>
+        </button>
     `;
 }
 
-async function renderMotionGallery(root) {
-    try {
-        const timeout = new Promise((_, reject) => {
-            window.setTimeout(() => reject(new Error("Framer Motion CDN timeout")), 6500);
-        });
-        const modules = Promise.all([
-            import("https://esm.sh/react@18.2.0"),
-            import("https://esm.sh/react-dom@18.2.0/client"),
-            import("https://esm.sh/framer-motion@11.18.2?deps=react@18.2.0,react-dom@18.2.0")
-        ]);
-        const [{ default: React }, { createRoot }, framer] = await Promise.race([modules, timeout]);
+function renderGallery(root) {
+    const initial = colorways[0];
+    root.innerHTML = `
+        <div class="colorway-gallery" data-active-colorway="${initial.code}">
+            <article class="colorway-feature" aria-live="polite">
+                <div class="feature-image-wrap">
+                    <img src="${initial.image}" alt="Visual study: Air Jordan 1 Low ${initial.name}" loading="lazy" decoding="async">
+                </div>
+                <div class="feature-copy">
+                    <span>${initial.code} / FEATURED STUDY</span>
+                    <h3>${initial.name}</h3>
+                    <p>${initial.note}</p>
+                </div>
+            </article>
+            <div class="colorway-stack">
+                ${colorways.map(cardMarkup).join("")}
+            </div>
+        </div>
+    `;
 
-        const { motion, AnimatePresence, LayoutGroup } = framer;
-        const h = React.createElement;
+    const gallery = root.querySelector(".colorway-gallery");
+    const feature = root.querySelector(".colorway-feature");
+    const featureImage = root.querySelector(".feature-image-wrap img");
+    const featureCode = root.querySelector(".feature-copy > span");
+    const featureTitle = root.querySelector(".feature-copy h3");
+    const featureNote = root.querySelector(".feature-copy p");
+    const cards = [...root.querySelectorAll(".shoe-item")];
+    let activeIndex = 0;
+    let swapTimer = 0;
 
-        function Gallery() {
-            const [activeIndex, setActiveIndex] = React.useState(0);
-            const active = colorways[activeIndex];
-
-            const cards = colorways.map((item, index) => {
-                const selected = index === activeIndex;
-
-                return h(motion.button, {
-                    key: item.code,
-                    type: "button",
-                    className: `shoe-item is-framer-motion${selected ? " is-active" : ""}`,
-                    style: { "--tilt": index % 2 === 0 ? "-2deg" : "2deg" },
-                    onClick: () => setActiveIndex(index),
-                    onMouseEnter: () => setActiveIndex(index),
-                    "aria-pressed": selected,
-                    initial: { opacity: 0, y: 38, rotate: index % 2 === 0 ? -2 : 2 },
-                    whileInView: { opacity: 1, y: 0, rotate: 0 },
-                    viewport: { once: true, amount: 0.25 },
-                    transition: { duration: 0.72, delay: index * 0.055, ease: [0.16, 1, 0.3, 1] },
-                    whileHover: { y: -10, scale: 1.025 },
-                    whileTap: { scale: 0.985 }
-                }, [
-                    selected ? h(motion.b, {
-                        className: "colorway-active-mark",
-                        layoutId: "colorway-active-mark",
-                        transition: { type: "spring", stiffness: 360, damping: 34, mass: 0.8 }
-                    }) : null,
-                    h("span", { className: "shoe-index", key: "index" }, item.code),
-                    h("div", { className: "shoe-frame", key: "frame" },
-                        h(motion.img, {
-                            src: item.image,
-                            alt: `Travis Scott Air Jordan 1 Low ${item.name}`,
-                            loading: "lazy",
-                            decoding: "async",
-                            animate: selected ? { scale: 1.13, rotate: 0 } : { scale: 1.03, rotate: index % 2 === 0 ? -2 : 2 },
-                            transition: { duration: 0.42, ease: [0.16, 1, 0.3, 1] }
-                        })
-                    ),
-                    h("span", { className: "shoe-label", key: "label" }, [
-                        h("span", { key: "tag" }, item.tag),
-                        item.name
-                    ])
-                ]);
-            });
-
-            return h(LayoutGroup, null, h(motion.div, {
-                className: "colorway-gallery",
-                "data-active-colorway": active.code,
-                initial: { opacity: 0, y: 42 },
-                whileInView: { opacity: 1, y: 0 },
-                viewport: { once: true, amount: 0.18 },
-                transition: { duration: 0.75, ease: [0.16, 1, 0.3, 1] }
-            }, [
-                h(motion.article, {
-                    className: "colorway-feature",
-                    key: "feature",
-                    layout: true
-                }, [
-                    h("div", { className: "feature-image-wrap", key: "image-wrap" },
-                        h(AnimatePresence, { mode: "wait" },
-                            h(motion.img, {
-                                key: active.image,
-                                src: active.image,
-                                alt: `Travis Scott Air Jordan 1 Low ${active.name}`,
-                                initial: {
-                                    opacity: 0,
-                                    x: 86,
-                                    y: 18,
-                                    scale: 0.84,
-                                    rotateY: -18,
-                                    filter: "blur(14px) saturate(0.78)",
-                                    clipPath: "polygon(48% 0, 52% 0, 58% 100%, 42% 100%)"
-                                },
-                                animate: {
-                                    opacity: 1,
-                                    x: 0,
-                                    y: 0,
-                                    scale: 1,
-                                    rotateY: 0,
-                                    filter: "blur(0px) saturate(1)",
-                                    clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)"
-                                },
-                                exit: {
-                                    opacity: 0,
-                                    x: -72,
-                                    y: -10,
-                                    scale: 0.92,
-                                    rotateY: 16,
-                                    filter: "blur(12px) saturate(0.72)",
-                                    clipPath: "polygon(0 0, 100% 0, 62% 100%, 38% 100%)"
-                                },
-                                transition: { duration: 0.76, ease: [0.76, 0, 0.24, 1] }
-                            })
-                        )
-                    ),
-                    h(motion.div, {
-                        className: "feature-copy",
-                        key: active.code,
-                        initial: { opacity: 0, y: 12 },
-                        animate: { opacity: 1, y: 0 },
-                        transition: { duration: 0.38, ease: [0.16, 1, 0.3, 1] }
-                    }, [
-                        h("span", { key: "code" }, `${active.code} / FEATURED MODEL`),
-                        h("h3", { key: "name" }, active.name),
-                        h("p", { key: "note" }, active.note)
-                    ])
-                ]),
-                h("div", { className: "colorway-stack", key: "stack" }, cards)
-            ]));
+    const setActive = (index) => {
+        if (index === activeIndex || !colorways[index]) {
+            return;
         }
 
-        root.classList.add("is-motion-enhanced");
-        createRoot(root).render(h(Gallery));
-    } catch (error) {
-        console.warn("Framer Motion gallery fallback:", error);
+        const next = colorways[index];
+        activeIndex = index;
+        window.clearTimeout(swapTimer);
+        feature.classList.add("is-changing");
+        gallery.dataset.activeColorway = next.code;
+
+        cards.forEach((card, cardIndex) => {
+            const selected = cardIndex === index;
+            card.classList.toggle("is-active", selected);
+            card.setAttribute("aria-pressed", String(selected));
+        });
+
+        swapTimer = window.setTimeout(() => {
+            featureImage.src = next.image;
+            featureImage.alt = `Visual study: Air Jordan 1 Low ${next.name}`;
+            featureCode.textContent = `${next.code} / FEATURED STUDY`;
+            featureTitle.textContent = next.name;
+            featureNote.textContent = next.note;
+            feature.classList.remove("is-changing");
+        }, 180);
+    };
+
+    cards.forEach((card) => {
+        card.dataset.tiltBound = "true";
+        card.addEventListener("click", () => setActive(Number(card.dataset.index)));
+        card.addEventListener("pointermove", (event) => {
+            const rect = card.getBoundingClientRect();
+            const x = (event.clientX - rect.left) / rect.width - 0.5;
+            const y = (event.clientY - rect.top) / rect.height - 0.5;
+            card.style.setProperty("--hover-tilt-x", `${(-y * 4).toFixed(2)}deg`);
+            card.style.setProperty("--hover-tilt-y", `${(x * 5).toFixed(2)}deg`);
+        }, { passive: true });
+        card.addEventListener("pointerleave", () => {
+            card.style.setProperty("--hover-tilt-x", "0deg");
+            card.style.setProperty("--hover-tilt-y", "0deg");
+        });
+    });
+
+    if ("IntersectionObserver" in window) {
+        const reveal = new IntersectionObserver((entries, observer) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) {
+                    return;
+                }
+                gallery.classList.add("is-revealed");
+                observer.unobserve(entry.target);
+            });
+        }, { threshold: 0.12 });
+        reveal.observe(gallery);
+    } else {
+        gallery.classList.add("is-revealed");
     }
+
+    window.dispatchEvent(new CustomEvent("site:collection-ready"));
 }
 
 window.addEventListener("DOMContentLoaded", () => {
     const root = document.getElementById("shoeGrid");
-    if (!root) {
-        return;
+    if (root) {
+        renderGallery(root);
     }
-
-    fallbackRender(root);
-    renderMotionGallery(root);
 });

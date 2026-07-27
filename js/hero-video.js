@@ -16,47 +16,56 @@ function setPhase(scene, phaseName) {
 }
 
 function phaseFor(time) {
-    let current = PHASES[0].name;
-    for (const phase of PHASES) {
-        if (time >= phase.at) {
-            current = phase.name;
-        }
-    }
-    return current;
+    return PHASES.reduce((current, phase) => time >= phase.at ? phase.name : current, PHASES[0].name);
 }
 
 function bindPointer(scene) {
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+    if (!finePointer.matches) {
+        return;
+    }
+
     let targetX = 0;
     let targetY = 0;
     let currentX = 0;
     let currentY = 0;
+    let frame = 0;
 
-    const tick = () => {
-        currentX += (targetX - currentX) * 0.055;
-        currentY += (targetY - currentY) * 0.055;
+    const settle = () => {
+        frame = 0;
+        currentX += (targetX - currentX) * 0.075;
+        currentY += (targetY - currentY) * 0.075;
         scene.style.setProperty("--scene-x", currentX.toFixed(4));
         scene.style.setProperty("--scene-y", currentY.toFixed(4));
-        requestAnimationFrame(tick);
+
+        if (Math.abs(targetX - currentX) + Math.abs(targetY - currentY) > 0.0015) {
+            frame = requestAnimationFrame(settle);
+        }
+    };
+
+    const schedule = () => {
+        if (!frame) {
+            frame = requestAnimationFrame(settle);
+        }
     };
 
     scene.addEventListener("pointermove", (event) => {
         const rect = scene.getBoundingClientRect();
         targetX = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
         targetY = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+        schedule();
     }, { passive: true });
 
     scene.addEventListener("pointerleave", () => {
         targetX = 0;
         targetY = 0;
+        schedule();
     });
-
-    requestAnimationFrame(tick);
 }
 
 function bootHeroVideo() {
     const scene = document.getElementById("heroScene");
     const video = document.getElementById("awakeningFilm");
-
     if (!scene || !video) {
         return;
     }
@@ -65,55 +74,91 @@ function bootHeroVideo() {
     setPhase(scene, "void");
     bindPointer(scene);
 
-    let playStartedAt = 0;
-    let rafId = 0;
+    let frame = 0;
+    let hasCompleted = false;
 
     const update = () => {
-        const duration = Number.isFinite(video.duration) && video.duration > 0 ? video.duration : 1;
-        const elapsed = playStartedAt ? (performance.now() - playStartedAt) / 1000 : 0;
-        const sceneTime = Math.max(video.currentTime, elapsed);
-        const progress = Math.min(1, Math.max(0, sceneTime / duration));
+        const duration = Number.isFinite(video.duration) && video.duration > 0 ? video.duration : 0;
+        const sceneTime = Math.max(0, video.currentTime || 0);
+        const progress = duration ? Math.min(1, sceneTime / duration) : 0;
         scene.style.setProperty("--film-progress", progress.toFixed(4));
         setPhase(scene, phaseFor(sceneTime));
     };
 
-    const loop = () => {
+    const stopFrame = () => {
+        cancelAnimationFrame(frame);
+        frame = 0;
+    };
+
+    const renderFrame = () => {
+        frame = 0;
         update();
-        rafId = requestAnimationFrame(loop);
+        if (!video.paused && !video.ended && !document.hidden) {
+            frame = requestAnimationFrame(renderFrame);
+        }
+    };
+
+    const startFrame = () => {
+        if (!frame && !document.hidden) {
+            frame = requestAnimationFrame(renderFrame);
+        }
+    };
+
+    const finish = () => {
+        if (hasCompleted) {
+            return;
+        }
+        hasCompleted = true;
+        stopFrame();
+        scene.style.setProperty("--film-progress", "1");
+        setPhase(scene, "afterglow");
+        scene.classList.add("is-film-complete");
+    };
+
+    const failGracefully = () => {
+        scene.classList.add("is-film-waiting");
+        setPhase(scene, "afterglow");
+    };
+
+    const tryPlay = () => {
+        if (document.hidden || hasCompleted) {
+            return;
+        }
+        const playback = video.play();
+        if (playback && typeof playback.catch === "function") {
+            playback.catch(failGracefully);
+        }
     };
 
     video.addEventListener("loadedmetadata", () => {
         scene.style.setProperty("--film-duration", video.duration.toFixed(2));
         update();
     });
-
     video.addEventListener("play", () => {
-        if (!playStartedAt) {
-            playStartedAt = performance.now() - video.currentTime * 1000;
-        }
+        scene.classList.remove("is-film-waiting");
         scene.classList.add("is-film-playing");
-        cancelAnimationFrame(rafId);
-        loop();
+        startFrame();
     });
-
-    video.addEventListener("timeupdate", update);
-    video.addEventListener("ended", () => {
-        cancelAnimationFrame(rafId);
-        scene.style.setProperty("--film-progress", "1");
-        setPhase(scene, "afterglow");
-        scene.classList.add("is-film-complete");
-    });
-
-    const tryPlay = () => {
-        const playPromise = video.play();
-        if (playPromise && typeof playPromise.catch === "function") {
-            playPromise.catch(() => {
-                scene.classList.add("is-film-waiting");
-            });
+    video.addEventListener("pause", () => {
+        if (!video.ended) {
+            stopFrame();
         }
-    };
+    });
+    video.addEventListener("timeupdate", update);
+    video.addEventListener("ended", finish);
+    video.addEventListener("error", failGracefully);
 
-    if (video.readyState >= 2) {
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+            stopFrame();
+            return;
+        }
+        if (!video.ended) {
+            tryPlay();
+        }
+    });
+
+    if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) {
         tryPlay();
         update();
     } else {
