@@ -16,12 +16,12 @@ class SiteMotion {
 
     prepareRevealTargets() {
         const selectors = [
-            ".tech-text",
-            ".dossier-panel",
-            ".collection-head",
-            ".release-title",
-            ".release-cell",
-            ".faq-title"
+            ".dossier-intro",
+            ".museum-intro",
+            ".process-intro",
+            ".explore-intro",
+            ".faq-intro",
+            ".final-copy"
         ];
         const targets = selectors.flatMap((selector) => [...document.querySelectorAll(selector)]);
 
@@ -69,7 +69,7 @@ class SiteMotion {
     }
 
     bindSectionDepth() {
-        const sections = [...document.querySelectorAll(".tech, .collection, .release-slide, .faq-slide")];
+        const sections = [...document.querySelectorAll(".dossier-deck, .colour-museum, .process-timeline, .explore-shoe, .faq-reel, .final-scene")];
         sections.forEach((section, index) => {
             section.classList.add("section-depth");
             section.style.setProperty("--section-index", String(index));

@@ -1,83 +1,94 @@
-function enhanceFaq() {
-    const root = document.querySelector(".faq-list");
+const FIELD_NOTES = {
+    swoosh: {
+        type: "PROFILE DETAIL",
+        meta: "01 / IDENTITY",
+        title: "REVERSE SWOOSH",
+        text: "The oversized reversed mark is the collaboration's quickest visual signal. It changes the profile without abandoning the AJ1 Low base.",
+        image: "assets/hf-side-a.png",
+        alt: "Reverse Swoosh detail"
+    },
+    pink: {
+        type: "COLOUR STUDY",
+        meta: "02 / TEMPERATURE",
+        title: "WHY PINK PACK?",
+        text: "The pale pink treatment does not soften the construction. It is balanced by brown nubuck, sail rubber and a more grounded material contrast.",
+        image: "assets/colorways/pink-pack-sail.png",
+        alt: "Pale pink colour study"
+    },
+    release: {
+        type: "FILM FRAME",
+        meta: "03 / CONTEXT",
+        title: "LIMITED RELEASE?",
+        text: "Availability, dates and quantities vary by market and retailer. What stays consistent is the collaboration's visual code, not a single universal retail story.",
+        image: "assets/awakening-poster.png",
+        alt: "Cinematic film frame of the sneaker"
+    },
+    materials: {
+        type: "MATERIAL RECORD",
+        meta: "04 / SURFACE",
+        title: "LEATHER / NUBUCK / SAIL",
+        text: "Read the object through its surfaces: leather grain on the overlays, the softer nap of nubuck, stitch rhythm and the warm tone of the midsole.",
+        image: "assets/hf-top.png",
+        alt: "Top material detail of the sneaker"
+    }
+};
+
+function initFieldNotes() {
+    const root = document.getElementById("faqInvestigation");
     if (!root) {
         return;
     }
 
-    const articles = [...root.querySelectorAll(":scope > article")];
-    const sampleStrip = root.querySelector(":scope > .faq-sample-strip");
-    if (!articles.length) {
-        return;
-    }
+    const prompts = [...root.querySelectorAll(".faq-prompt")];
+    const story = root.querySelector(".faq-story");
+    const image = document.getElementById("faqStoryImage");
+    const type = document.getElementById("faqStoryType");
+    const meta = document.getElementById("faqStoryMeta");
+    const title = document.getElementById("faqStoryTitle");
+    const text = document.getElementById("faqStoryText");
+    let activeKey = "swoosh";
+    let swapTimer = 0;
 
-    const grid = document.createElement("div");
-    grid.className = "faq-motion-grid";
-
-    const selectItem = (selected) => {
-        articles.forEach((article) => {
-            const button = article.querySelector(".faq-question");
-            const answer = article.querySelector("p");
-            const isSelected = article === selected;
-            article.classList.toggle("is-active", isSelected);
-            button?.setAttribute("aria-expanded", String(isSelected));
-            answer?.setAttribute("aria-hidden", String(!isSelected));
-        });
-    };
-
-    articles.forEach((article, index) => {
-        const heading = article.querySelector("h3");
-        const answer = article.querySelector("p");
-        if (!heading || !answer) {
+    const selectNote = (key) => {
+        const note = FIELD_NOTES[key];
+        if (!note || key === activeKey) {
             return;
         }
 
-        const answerId = `detail-answer-${index + 1}`;
-        answer.id = answerId;
-        answer.setAttribute("aria-hidden", "true");
-        article.classList.add("faq-motion-item");
-        article.style.setProperty("--faq-index", String(index));
-
-        const button = document.createElement("button");
-        button.className = "faq-question";
-        button.type = "button";
-        button.setAttribute("aria-expanded", "false");
-        button.setAttribute("aria-controls", answerId);
-        button.innerHTML = `<span class="faq-number">0${index + 1}</span><span class="faq-question-copy"></span><span class="faq-indicator" aria-hidden="true"></span>`;
-        button.querySelector(".faq-question-copy").append(heading);
-        article.insertBefore(button, answer);
-
-        button.addEventListener("click", () => {
-            const willOpen = !article.classList.contains("is-active");
-            selectItem(willOpen ? article : null);
+        activeKey = key;
+        root.dataset.activeFaq = key;
+        prompts.forEach((prompt) => {
+            const selected = prompt.dataset.faqKey === key;
+            prompt.classList.toggle("is-active", selected);
+            prompt.setAttribute("aria-selected", String(selected));
         });
+        window.clearTimeout(swapTimer);
+        story.classList.add("is-swapping");
+        swapTimer = window.setTimeout(() => {
+            image.src = note.image;
+            image.alt = note.alt;
+            type.textContent = note.type;
+            meta.textContent = note.meta;
+            title.textContent = note.title;
+            text.textContent = note.text;
+            story.classList.remove("is-swapping");
+        }, 145);
+    };
 
-        grid.append(article);
+    prompts.forEach((prompt, index) => {
+        const key = prompt.dataset.faqKey;
+        prompt.addEventListener("pointerenter", () => selectNote(key), { passive: true });
+        prompt.addEventListener("focus", () => selectNote(key));
+        prompt.addEventListener("click", () => selectNote(key));
+        prompt.addEventListener("keydown", (event) => {
+            if (!['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'].includes(event.key)) {
+                return;
+            }
+            event.preventDefault();
+            const direction = ['ArrowDown', 'ArrowRight'].includes(event.key) ? 1 : -1;
+            prompts[(index + direction + prompts.length) % prompts.length].focus();
+        });
     });
-
-    if (sampleStrip) {
-        grid.append(sampleStrip);
-    }
-
-    root.innerHTML = "";
-    root.classList.add("is-faq-motion");
-    root.append(grid);
-    selectItem(articles[0]);
-    articles[0].querySelector("p")?.setAttribute("aria-hidden", "false");
-
-    if ("IntersectionObserver" in window) {
-        const reveal = new IntersectionObserver((entries, observer) => {
-            entries.forEach((entry) => {
-                if (!entry.isIntersecting) {
-                    return;
-                }
-                entry.target.classList.add("is-visible");
-                observer.unobserve(entry.target);
-            });
-        }, { threshold: 0.14 });
-        [...articles, sampleStrip].filter(Boolean).forEach((item) => reveal.observe(item));
-    } else {
-        [...articles, sampleStrip].filter(Boolean).forEach((item) => item.classList.add("is-visible"));
-    }
 }
 
-window.addEventListener("DOMContentLoaded", enhanceFaq);
+window.addEventListener("DOMContentLoaded", initFieldNotes);

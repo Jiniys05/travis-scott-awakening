@@ -118,6 +118,15 @@ function bootHeroVideo() {
     video.addEventListener("ended", finish);
     video.addEventListener("error", failGracefully);
 
+    window.addEventListener("hero:replay", () => {
+        hasCompleted = false;
+        scene.classList.remove("is-film-complete", "is-film-waiting");
+        scene.classList.add("is-film-playing");
+        video.currentTime = 0;
+        setPhase(scene, "void");
+        tryPlay();
+    });
+
     document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
             return;

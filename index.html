@@ -32,8 +32,8 @@
     <link rel="preload" as="video" href="assets/awakening-film.mp4" type="video/mp4">
     <link rel="preload" as="image" href="assets/awakening-poster.png" fetchpriority="high">
     <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/brutalism.css?v=performance-pass-02">
-    <link rel="stylesheet" href="css/responsive.css?v=performance-pass-02">
+    <link rel="stylesheet" href="css/brutalism.css?v=interactive-04">
+    <link rel="stylesheet" href="css/responsive.css?v=interactive-04">
 </head>
 <body>
     <a class="skip-link" href="#dossier">К архивному досье</a>
@@ -84,132 +84,119 @@
             </div>
         </section>
 
-        <section class="tech" id="dossier" aria-labelledby="dossier-title">
-            <div class="tech-text dossier-left">
-                <h2 id="dossier-title">PINK<br>PACK<br>DOSSIER</h2>
-                <p>Эволюция языка Travis Scott на базе Air Jordan 1 Low OG: архивный баскетбольный силуэт остаётся читаемым, а новая светлая палитра меняет его тон без потери узнаваемого кода.</p>
-            </div>
-            <div class="tech-diagram dossier-panel">
-                <div class="dossier-kicker">[AIR JORDAN 1 LOW OG SP / IQ7604-101]</div>
-                <h2>МАЛЕНЬКАЯ<br>ИСТОРИЯ</h2>
-                <p class="dossier-story">Версия Shy Pink и Tropical Pink развивает коллаборацию через более светлый спектр, чем ранние земляные вариации. Вместо смены силуэта здесь работает другой баланс: белая кожа, коричневый нубук, розовые акценты и обратный Swoosh сохраняют узнаваемую конструкцию Travis Scott x Jordan.</p>
-                <h3 class="facts-title">ДЕТАЛИ РЕЛИЗА</h3>
-                <div class="facts-grid">
-                    <article>
-                        <span>01 / МАТЕРИАЛЬНЫЙ КОНТРАСТ</span>
-                        <p>Белая кожа на накладках контрастирует с нубуком на носке и боковых панелях. Разница фактур важнее, чем один цветовой жест.</p>
-                    </article>
-                    <article>
-                        <span>02 / REVERSE SWOOSH</span>
-                        <p>Обратный Swoosh остаётся главным визуальным маркером линии Travis Scott x Jordan и меняет читаемость профиля без изменения базы AJ1 Low.</p>
-                    </article>
-                    <article>
-                        <span>03 / РОЗОВЫЙ КАК АКЦЕНТ</span>
-                        <p>Shy Pink и Tropical Pink работают точечно: на Swoosh, подошве и фирменных деталях, сохраняя основной объём модели спокойным.</p>
-                    </article>
-                    <article>
-                        <span>04 / CO-BRANDING</span>
-                        <p>Маркировка Nike Air, Wings и Cactus Jack собирает пару в коллаборационный релиз, а не в очередную стандартную вариацию Jordan 1 Low.</p>
-                    </article>
+        <section class="dossier-deck" id="dossier" aria-labelledby="dossier-title">
+            <header class="dossier-intro">
+                <span>[ARCHIVE SYSTEM / 01]</span>
+                <h2 id="dossier-title">PINK PACK<br>DOSSIER</h2>
+                <p>Four entry points. One low-cut silhouette. Hover to inspect the story, then open a case file.</p>
+            </header>
+            <div class="dossier-constellation" id="dossierConstellation" data-active-dossier="origin">
+                <div class="dossier-rail" role="tablist" aria-label="Pink Pack dossier chapters">
+                    <button class="dossier-card is-active" type="button" role="tab" aria-selected="true" aria-expanded="false" data-dossier-key="origin">
+                        <span>01</span><strong>ORIGIN</strong><em>THE ARCHIVE BASE</em>
+                    </button>
+                    <button class="dossier-card" type="button" role="tab" aria-selected="false" aria-expanded="false" data-dossier-key="design">
+                        <span>02</span><strong>DESIGN</strong><em>THE REVERSED CODE</em>
+                    </button>
+                    <button class="dossier-card" type="button" role="tab" aria-selected="false" aria-expanded="false" data-dossier-key="materials">
+                        <span>03</span><strong>MATERIALS</strong><em>THE TACTILE LAYER</em>
+                    </button>
+                    <button class="dossier-card" type="button" role="tab" aria-selected="false" aria-expanded="false" data-dossier-key="legacy">
+                        <span>04</span><strong>LEGACY</strong><em>THE COLLECTIBLE SIGNAL</em>
+                    </button>
                 </div>
-                <a class="source-note" href="https://www.nike.com/launch/t/air-jordan-1-low-x-travis-scott-shy-pink-and-tropical-pink" target="_blank" rel="noreferrer">NIKE LAUNCH REFERENCE</a>
+                <article class="dossier-stage" aria-live="polite">
+                    <div class="dossier-stage-media"><img id="dossierStageImage" src="assets/hf-side-a.png" alt="Air Jordan 1 Low in profile"></div>
+                    <div class="dossier-stage-copy">
+                        <span id="dossierStageMeta">01 / ORIGIN</span>
+                        <h3 id="dossierStageTitle">ARCHIVE BASE</h3>
+                        <p id="dossierStageText">The AJ1 Low OG structure keeps the original basketball proportions intact: a low collar, layered leather panels and a grounded cupsole.</p>
+                        <button class="dossier-open" id="dossierOpen" type="button" aria-expanded="false">OPEN CASE FILE <i aria-hidden="true">+</i></button>
+                    </div>
+                    <button class="dossier-close" id="dossierClose" type="button" aria-label="Close case file">CLOSE <i aria-hidden="true">×</i></button>
+                </article>
             </div>
         </section>
 
-        <section class="collection" id="colour-studies" aria-labelledby="colour-studies-title">
-            <div class="collection-head">
-                <span class="collection-kicker">[CURATED COLOUR STUDIES]</span>
-                <h2 class="collection-title" id="colour-studies-title">COLOUR STUDIES</h2>
-                <p class="collection-copy">Шесть визуальных вариаций для сцены. Это не каталог официальных релизов: карточки показывают, как одна архитектура AJ1 Low выдерживает разные температуры розового, коричневого и мятного.</p>
-            </div>
+        <section class="colour-museum" id="colour-studies" aria-labelledby="colour-studies-title">
+            <header class="museum-intro">
+                <span>[COLOUR ARCHIVE / 02]</span>
+                <h2 id="colour-studies-title">COLOUR<br>STUDIES</h2>
+                <p>Not a picker. A sequence of temperatures applied to the same silhouette.</p>
+            </header>
             <div class="shoe-grid" id="shoeGrid" aria-live="polite"></div>
         </section>
 
-        <section class="release-slide" id="release-notes" aria-labelledby="release-notes-title">
-            <h2 class="release-title" id="release-notes-title">DROP<br>NOTES</h2>
-            <div class="release-board">
-                <div class="release-cell">
-                    <span>MODEL</span>
-                    Air Jordan 1 Low OG SP x Travis Scott
+        <section class="process-timeline" id="release-notes" aria-labelledby="release-notes-title">
+            <header class="process-intro">
+                <span>[PROCESS LOG / 03]</span>
+                <h2 id="release-notes-title">FROM<br>SKETCH<br>TO SIGNAL</h2>
+                <p>Scroll through the four moments that turn a familiar silhouette into a collectible object.</p>
+            </header>
+            <div class="process-journey" id="processJourney" data-active-process="sketch">
+                <div class="process-stage" aria-live="polite">
+                    <div class="process-stage-image"><img id="processStageImage" src="assets/shoe-side-main-2x.png" alt="Sketch stage of the Air Jordan 1 Low"></div>
+                    <div class="process-stage-copy"><span id="processStageMeta">01 / SKETCH</span><h3 id="processStageTitle">THE BASELINE</h3><p id="processStageText">The familiar AJ1 Low profile is kept deliberately legible before the collaboration changes its visual centre of gravity.</p></div>
                 </div>
-                <div class="release-cell">
-                    <span>COLOUR</span>
-                    Sail / Tropical Pink / Shy Pink / Muslin
-                </div>
-                <div class="release-cell">
-                    <span>STYLE CODE</span>
-                    IQ7604-101
-                </div>
-                <div class="release-cell">
-                    <span>RELEASE</span>
-                    29 MAY 2026
-                </div>
-                <div class="release-cell wide">
-                    <span>DESIGN NOTES</span>
-                    Модель сохраняет устойчивый язык Travis Scott x Jordan: низкий силуэт AJ1, обратный Swoosh и co-branding. Светлая палитра не отменяет этот код, а выводит контраст кожи, нубука и розовых деталей на первый план.
-                </div>
-                <div class="release-cell wide">
-                    <span>IMAGE DIRECTION</span>
-                    Прямой свет, зерно, тёмная среда и крупные планы кожи с нубуком помогают показать материал. Визуал должен работать как предметная съёмка, а не как рекламный мокап.
+                <div class="process-rail" aria-label="Design process timeline">
+                    <article class="process-step is-active" tabindex="0" data-process-key="sketch"><span>01</span><h3>SKETCH</h3><p>Archive proportions remain visible.</p></article>
+                    <article class="process-step" tabindex="0" data-process-key="sampling"><span>02</span><h3>SAMPLING</h3><p>Pink is tested as material, not decoration.</p></article>
+                    <article class="process-step" tabindex="0" data-process-key="prototype"><span>03</span><h3>PROTOTYPE</h3><p>Reverse Swoosh shifts the whole profile.</p></article>
+                    <article class="process-step" tabindex="0" data-process-key="release"><span>04</span><h3>RELEASE</h3><p>Co-branding seals the visual code.</p></article>
                 </div>
             </div>
         </section>
 
-        <section class="faq-slide" id="details" aria-labelledby="details-title">
-            <h2 class="faq-title" id="details-title">DETAIL<br>CHECK</h2>
-            <div class="faq-list">
-                <article>
-                    <h3>Это отдельная модель или обычный AJ1 Low?</h3>
-                    <p>База - Air Jordan 1 Low OG. SP-версия отличается коллаборационными деталями: обратным Swoosh, графикой Cactus Jack, co-branding и отдельной цветовой историей.</p>
-                </article>
-                <article>
-                    <h3>Почему reverse Swoosh так важен?</h3>
-                    <p>Он стал главным визуальным кодом линии Travis Scott x Jordan. Деталь меняет профиль пары и мгновенно отделяет её от стандартных Jordan 1 Low.</p>
-                </article>
-                <article>
-                    <h3>Какие материалы смотреть крупным планом?</h3>
-                    <p>Кожу на накладках, нубук на носке и quarter-панелях, тон Midsole и аккуратность строчки вокруг Swoosh. Именно фактура даёт модели глубину.</p>
-                </article>
-                <article>
-                    <h3>Какая съёмка подходит этой паре?</h3>
-                    <p>Лучше всего работают крупные предметные ракурсы: прямой свет, зерно, тёмный фон и фрагменты материала. Такой подход сохраняет характер пары без лишнего визуального шума.</p>
-                </article>
-                <div class="faq-sample-strip" aria-label="Образцы для изучения деталей">
-                    <div class="faq-sample-card">
-                        <span>COLOUR SAMPLES</span>
-                        <div class="sample-swatches" aria-hidden="true">
-                            <i style="--sample:#f4a0b8"></i>
-                            <i style="--sample:#f5f0e8"></i>
-                            <i style="--sample:#4a332c"></i>
-                            <i style="--sample:#d9cdb2"></i>
-                        </div>
-                        <p>Pink / Sail / brown nubuck / aged midsole.</p>
-                    </div>
-                    <div class="faq-sample-card">
-                        <span>MATERIAL CUTS</span>
-                        <div class="sample-bars" aria-hidden="true"><i></i><i></i><i></i></div>
-                        <p>Leather grain, nubuck nap, stitch rhythm.</p>
-                    </div>
-                    <div class="faq-sample-card">
-                        <span>STYLE CODE</span>
-                        <strong>IQ7604-101</strong>
-                        <p>Сверяйте код с карточкой конкретного рынка и размера.</p>
-                    </div>
-                    <div class="faq-sample-card">
-                        <span>PHOTO SET</span>
-                        <strong>04 ANGLES</strong>
-                        <p>Side, front, heel, top. Один масштаб и чистый контур.</p>
-                    </div>
+        <section class="explore-shoe" id="explore" aria-labelledby="explore-title">
+            <header class="explore-intro"><span>[OBJECT EXPLORER / 04]</span><h2 id="explore-title">EXPLORE<br>THE SHOE</h2><p>Touch a point to isolate a component. The silhouette becomes a construction map.</p></header>
+            <div class="explore-console" id="exploreConsole" data-active-part="toe">
+                <div class="explore-product" aria-label="Interactive model breakdown">
+                    <div class="explore-orbit explore-orbit-a" aria-hidden="true"></div><div class="explore-orbit explore-orbit-b" aria-hidden="true"></div>
+                    <img src="assets/hf-side-a.png" alt="Air Jordan 1 Low side profile for component inspection">
+                    <button class="shoe-hotspot is-active" type="button" data-part-key="toe" style="--hotspot-x:73%;--hotspot-y:57%" aria-label="Inspect toe leather"><span>+</span></button>
+                    <button class="shoe-hotspot" type="button" data-part-key="swoosh" style="--hotspot-x:44%;--hotspot-y:48%" aria-label="Inspect reverse Swoosh"><span>+</span></button>
+                    <button class="shoe-hotspot" type="button" data-part-key="sole" style="--hotspot-x:52%;--hotspot-y:76%" aria-label="Inspect sole"><span>+</span></button>
+                    <button class="shoe-hotspot" type="button" data-part-key="heel" style="--hotspot-x:19%;--hotspot-y:40%" aria-label="Inspect heel branding"><span>+</span></button>
                 </div>
+                <aside class="explore-inspector" aria-live="polite">
+                    <div class="explore-inspector-image"><img id="exploreInspectorImage" src="assets/hf-front.png" alt="Toe leather detail"></div>
+                    <span id="exploreInspectorMeta">01 / TOE BOX</span><h3 id="exploreInspectorTitle">WHITE LEATHER</h3><p id="exploreInspectorText">A white leather mudguard frames the brown perforated toe and gives the profile its clearest material contrast.</p>
+                </aside>
             </div>
+        </section>
+
+        <section class="faq-reel" id="details" aria-labelledby="details-title">
+            <header class="faq-intro"><span>[FIELD NOTES / 05]</span><h2 id="details-title">DETAIL<br>CHECK</h2><p>Each answer is a visual record rather than a collapsed paragraph.</p></header>
+            <div class="faq-investigation" id="faqInvestigation" data-active-faq="swoosh">
+                <div class="faq-prompts" role="tablist" aria-label="Questions about the Travis Scott Air Jordan 1 Low">
+                    <button class="faq-prompt is-active" type="button" role="tab" aria-selected="true" data-faq-key="swoosh"><span>01</span>WHY REVERSE SWOOSH?</button>
+                    <button class="faq-prompt" type="button" role="tab" aria-selected="false" data-faq-key="pink"><span>02</span>WHY PINK PACK?</button>
+                    <button class="faq-prompt" type="button" role="tab" aria-selected="false" data-faq-key="release"><span>03</span>LIMITED RELEASE?</button>
+                    <button class="faq-prompt" type="button" role="tab" aria-selected="false" data-faq-key="materials"><span>04</span>MATERIALS?</button>
+                </div>
+                <article class="faq-story" aria-live="polite">
+                    <div class="faq-story-media"><img id="faqStoryImage" src="assets/hf-side-a.png" alt="Reverse Swoosh detail"><span id="faqStoryType">PROFILE DETAIL</span></div>
+                    <div class="faq-story-copy"><span id="faqStoryMeta">01 / IDENTITY</span><h3 id="faqStoryTitle">REVERSE SWOOSH</h3><p id="faqStoryText">The oversized reversed mark is the collaboration's quickest visual signal. It changes the profile without abandoning the AJ1 Low base.</p></div>
+                </article>
+            </div>
+        </section>
+
+        <section class="final-scene" id="finale" aria-labelledby="finale-title">
+            <div class="final-field" aria-hidden="true"><span></span><span></span></div>
+            <img class="final-product" src="assets/hf-side-b.png" alt="Air Jordan 1 Low floating in the final scene">
+            <div class="final-copy"><span>[THE AWAKENING / END FRAME]</span><h2 id="finale-title">THE DETAIL<br>STAYS AWAKE.</h2><p>One object. Four angles. A language that holds when the light goes quiet.</p><a class="final-replay" href="#heroScene" data-replay-film>REPLAY THE AWAKENING <i aria-hidden="true">↗</i></a></div>
         </section>
     </main>
 
-    <script src="js/cursor.js?v=performance-pass-02"></script>
-    <script type="module" src="js/hero-video.js?v=performance-pass-02"></script>
-    <script type="module" src="js/hero-motion.js?v=performance-pass-02"></script>
-    <script type="module" src="js/collection.js?v=performance-pass-02"></script>
-    <script type="module" src="js/faq-motion.js?v=performance-pass-02"></script>
-    <script src="js/site-motion.js?v=performance-pass-02"></script>
+    <script src="js/cursor.js?v=interactive-04"></script>
+    <script type="module" src="js/hero-video.js?v=interactive-04"></script>
+    <script type="module" src="js/hero-motion.js?v=interactive-04"></script>
+    <script type="module" src="js/dossier.js?v=interactive-04"></script>
+    <script type="module" src="js/collection.js?v=interactive-04"></script>
+    <script type="module" src="js/timeline.js?v=interactive-04"></script>
+    <script type="module" src="js/explore.js?v=interactive-04"></script>
+    <script type="module" src="js/faq-motion.js?v=interactive-04"></script>
+    <script type="module" src="js/finale.js?v=interactive-04"></script>
+    <script src="js/site-motion.js?v=interactive-04"></script>
 </body>
 </html>
