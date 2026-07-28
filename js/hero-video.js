@@ -74,34 +74,11 @@ function bootHeroVideo() {
     setPhase(scene, "void");
     bindPointer(scene);
 
-    let frame = 0;
     let hasCompleted = false;
 
     const update = () => {
-        const duration = Number.isFinite(video.duration) && video.duration > 0 ? video.duration : 0;
         const sceneTime = Math.max(0, video.currentTime || 0);
-        const progress = duration ? Math.min(1, sceneTime / duration) : 0;
-        scene.style.setProperty("--film-progress", progress.toFixed(4));
         setPhase(scene, phaseFor(sceneTime));
-    };
-
-    const stopFrame = () => {
-        cancelAnimationFrame(frame);
-        frame = 0;
-    };
-
-    const renderFrame = () => {
-        frame = 0;
-        update();
-        if (!video.paused && !video.ended && !document.hidden) {
-            frame = requestAnimationFrame(renderFrame);
-        }
-    };
-
-    const startFrame = () => {
-        if (!frame && !document.hidden) {
-            frame = requestAnimationFrame(renderFrame);
-        }
     };
 
     const finish = () => {
@@ -109,8 +86,6 @@ function bootHeroVideo() {
             return;
         }
         hasCompleted = true;
-        stopFrame();
-        scene.style.setProperty("--film-progress", "1");
         setPhase(scene, "afterglow");
         scene.classList.add("is-film-complete");
     };
@@ -137,12 +112,7 @@ function bootHeroVideo() {
     video.addEventListener("play", () => {
         scene.classList.remove("is-film-waiting");
         scene.classList.add("is-film-playing");
-        startFrame();
-    });
-    video.addEventListener("pause", () => {
-        if (!video.ended) {
-            stopFrame();
-        }
+        update();
     });
     video.addEventListener("timeupdate", update);
     video.addEventListener("ended", finish);
@@ -150,7 +120,6 @@ function bootHeroVideo() {
 
     document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
-            stopFrame();
             return;
         }
         if (!video.ended) {

@@ -3494,3 +3494,98 @@ html {
     }
 
 }
+
+/* Performance pass: preserve the film choreography without repainting the full scene forever. */
+.noise-overlay,
+.tech-grid,
+.hero::before,
+.hero::after,
+.video-awakening-scene::before,
+.video-awakening-scene::after,
+.hero-video-stage::before,
+.hero-ambient-light,
+.hero-scan-stack span,
+.hero-dust-field span,
+.colorway-gallery::before {
+    animation: none !important;
+}
+
+.noise-overlay {
+    opacity: 0.028;
+}
+
+.tech-grid {
+    opacity: 0.045;
+}
+
+.hero::before,
+.hero::after,
+.video-awakening-scene::before,
+.video-awakening-scene::after {
+    filter: none;
+}
+
+.hero-video-stage::before {
+    filter: blur(9px);
+    opacity: 0.34;
+}
+
+.hero-ambient-light,
+.hero-scan-stack span {
+    opacity: 0;
+}
+
+.hero-dust-field span {
+    opacity: 0.26;
+}
+
+.video-awakening-scene[data-phase="forming"] .hero-video-aura,
+.video-awakening-scene[data-phase="title"] .hero-video-aura,
+.video-awakening-scene[data-phase="subtitle"] .hero-video-aura,
+.video-awakening-scene[data-phase="cards"] .hero-video-aura,
+.video-awakening-scene[data-phase="afterglow"] .hero-video-aura,
+.video-awakening-scene[data-phase="cards"] .hero-video-reflection,
+.video-awakening-scene[data-phase="afterglow"] .hero-video-reflection,
+.video-awakening-scene.is-film-complete .hero-film {
+    animation: none !important;
+}
+
+.video-awakening-scene[data-phase="forming"] .hero-video-aura,
+.video-awakening-scene[data-phase="title"] .hero-video-aura,
+.video-awakening-scene[data-phase="subtitle"] .hero-video-aura,
+.video-awakening-scene[data-phase="cards"] .hero-video-aura,
+.video-awakening-scene[data-phase="afterglow"] .hero-video-aura {
+    filter: blur(22px);
+}
+
+.video-awakening-scene[data-phase="cards"] .hero-video-reflection,
+.video-awakening-scene[data-phase="afterglow"] .hero-video-reflection {
+    filter: blur(8px);
+}
+
+.video-awakening-scene.is-film-complete .hero-film {
+    filter: contrast(1.06) saturate(0.86) brightness(0.88);
+}
+
+.hero-film {
+    will-change: transform;
+}
+
+.title-letter,
+.title-space {
+    will-change: auto;
+}
+
+.section-depth::before {
+    filter: none !important;
+}
+
+@media (min-width: 769px) {
+    .tech,
+    .dossier,
+    .collection,
+    .faq-section {
+        content-visibility: auto;
+        contain-intrinsic-size: auto 760px;
+    }
+}
