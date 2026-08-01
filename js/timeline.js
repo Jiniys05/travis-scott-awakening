@@ -1,29 +1,29 @@
 const PROCESS_STEPS = {
     sketch: {
-        meta: "01 / SKETCH",
-        title: "THE BASELINE",
-        text: "The familiar AJ1 Low profile is kept deliberately legible before the collaboration changes its visual centre of gravity.",
+        meta: "01 / ARCHIVE",
+        title: "THE BASE",
+        text: "The familiar AJ1 Low profile stays deliberately legible. The collaboration begins by preserving the original proportion, not hiding it.",
         image: "assets/shoe-side-main-2x.png",
         alt: "Low profile study of the sneaker"
     },
     sampling: {
-        meta: "02 / SAMPLING",
-        title: "COLOUR AS MATERIAL",
-        text: "Pink is handled as surface temperature, not an accent pasted onto a white base. The suede, leather and sole each take it differently.",
+        meta: "02 / COLOUR",
+        title: "PINK, WEIGHTED",
+        text: "Pink is handled as a surface temperature, not decoration. Nubuck, leather and rubber each hold it with a different visual weight.",
         image: "assets/hf-top.png",
         alt: "Top view of the lace and material sampling"
     },
     prototype: {
-        meta: "03 / PROTOTYPE",
-        title: "PROFILE SHIFT",
-        text: "The reversed Swoosh gives the profile a new direction. It creates the visual tension that makes this line distinct even at a distance.",
+        meta: "03 / REVERSE",
+        title: "THE SHIFT",
+        text: "The reversed Swoosh redirects the silhouette in one move. It is the point where the profile stops reading like an ordinary AJ1 Low.",
         image: "assets/hf-side-b.png",
         alt: "Profile showing the reversed Swoosh"
     },
     release: {
         meta: "04 / RELEASE",
-        title: "THE SIGNAL",
-        text: "The finished pair reads through its system of signs: Nike Air, Wings, Cactus Jack marks and a specific mix of leather, nubuck and sail rubber.",
+        title: "THE FINAL CODE",
+        text: "Nike Air, Wings, Cactus Jack marks and the warm sail sole resolve the final object into one recognisable visual system.",
         image: "assets/hf-rear.png",
         alt: "Rear view of the finished sneaker"
     }

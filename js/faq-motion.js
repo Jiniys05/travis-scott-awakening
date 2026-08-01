@@ -3,33 +3,25 @@ const FIELD_NOTES = {
         type: "PROFILE DETAIL",
         meta: "01 / IDENTITY",
         title: "REVERSE SWOOSH",
-        text: "The oversized reversed mark is the collaboration's quickest visual signal. It changes the profile without abandoning the AJ1 Low base.",
+        text: "The oversized reversed mark changes the whole profile without abandoning the AJ1 Low base. It is the collaboration's fastest visual signal.",
         image: "assets/hf-side-a.png",
-        alt: "Reverse Swoosh detail"
+        alt: "Reverse Swoosh detail of the sneaker"
     },
     pink: {
         type: "COLOUR STUDY",
         meta: "02 / TEMPERATURE",
-        title: "WHY PINK PACK?",
-        text: "The pale pink treatment does not soften the construction. It is balanced by brown nubuck, sail rubber and a more grounded material contrast.",
+        title: "PINK PACK",
+        text: "The pale pink treatment is balanced by brown nubuck, sail rubber and off-white leather. The palette changes the atmosphere, not the silhouette's weight.",
         image: "assets/colorways/pink-pack-sail.png",
-        alt: "Pale pink colour study"
+        alt: "Pale pink colour study of the sneaker"
     },
     release: {
-        type: "FILM FRAME",
+        type: "RELEASE RECORD",
         meta: "03 / CONTEXT",
-        title: "LIMITED RELEASE?",
-        text: "Availability, dates and quantities vary by market and retailer. What stays consistent is the collaboration's visual code, not a single universal retail story.",
+        title: "LIMITED RELEASE",
+        text: "Availability, dates and quantities vary by market and retailer. The durable part is the visual language: a recognisable Travis Scott code applied to the AJ1 Low.",
         image: "assets/awakening-poster.png",
-        alt: "Cinematic film frame of the sneaker"
-    },
-    materials: {
-        type: "MATERIAL RECORD",
-        meta: "04 / SURFACE",
-        title: "LEATHER / NUBUCK / SAIL",
-        text: "Read the object through its surfaces: leather grain on the overlays, the softer nap of nubuck, stitch rhythm and the warm tone of the midsole.",
-        image: "assets/hf-top.png",
-        alt: "Top material detail of the sneaker"
+        alt: "Cinematic release frame of the sneaker"
     }
 };
 
@@ -40,28 +32,60 @@ function initFieldNotes() {
     }
 
     const prompts = [...root.querySelectorAll(".faq-prompt")];
-    const story = root.querySelector(".faq-story");
+    const story = document.getElementById("faqStory");
+    const close = document.getElementById("faqStoryClose");
     const image = document.getElementById("faqStoryImage");
     const type = document.getElementById("faqStoryType");
     const meta = document.getElementById("faqStoryMeta");
     const title = document.getElementById("faqStoryTitle");
     const text = document.getElementById("faqStoryText");
-    let activeKey = "swoosh";
+    let activeKey = null;
     let swapTimer = 0;
+    let closeTimer = 0;
 
-    const selectNote = (key) => {
+    const setPromptState = () => {
+        prompts.forEach((prompt) => {
+            const selected = prompt.dataset.faqKey === activeKey;
+            prompt.classList.toggle("is-active", selected);
+            prompt.setAttribute("aria-expanded", String(selected && root.dataset.answerOpen === "true"));
+        });
+    };
+
+    const closeNote = () => {
+        if (root.dataset.answerOpen !== "true") {
+            return;
+        }
+
+        window.clearTimeout(closeTimer);
+        root.dataset.answerOpen = "false";
+        story.setAttribute("aria-hidden", "true");
+        activeKey = null;
+        setPromptState();
+        closeTimer = window.setTimeout(() => {
+            if (root.dataset.answerOpen === "false") {
+                story.hidden = true;
+            }
+        }, 520);
+    };
+
+    const openNote = (key) => {
         const note = FIELD_NOTES[key];
-        if (!note || key === activeKey) {
+        if (!note) {
+            return;
+        }
+
+        if (key === activeKey && root.dataset.answerOpen === "true") {
+            closeNote();
             return;
         }
 
         activeKey = key;
-        root.dataset.activeFaq = key;
-        prompts.forEach((prompt) => {
-            const selected = prompt.dataset.faqKey === key;
-            prompt.classList.toggle("is-active", selected);
-            prompt.setAttribute("aria-selected", String(selected));
-        });
+        window.clearTimeout(closeTimer);
+        story.hidden = false;
+        story.setAttribute("aria-hidden", "false");
+        root.dataset.answerOpen = "true";
+        setPromptState();
+
         window.clearTimeout(swapTimer);
         story.classList.add("is-swapping");
         swapTimer = window.setTimeout(() => {
@@ -72,22 +96,28 @@ function initFieldNotes() {
             title.textContent = note.title;
             text.textContent = note.text;
             story.classList.remove("is-swapping");
-        }, 145);
+        }, 130);
     };
 
     prompts.forEach((prompt, index) => {
         const key = prompt.dataset.faqKey;
-        prompt.addEventListener("pointerenter", () => selectNote(key), { passive: true });
-        prompt.addEventListener("focus", () => selectNote(key));
-        prompt.addEventListener("click", () => selectNote(key));
+        prompt.addEventListener("click", () => openNote(key));
         prompt.addEventListener("keydown", (event) => {
-            if (!['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'].includes(event.key)) {
+            if (!["ArrowDown", "ArrowRight", "ArrowUp", "ArrowLeft"].includes(event.key)) {
                 return;
             }
+
             event.preventDefault();
-            const direction = ['ArrowDown', 'ArrowRight'].includes(event.key) ? 1 : -1;
+            const direction = ["ArrowDown", "ArrowRight"].includes(event.key) ? 1 : -1;
             prompts[(index + direction + prompts.length) % prompts.length].focus();
         });
+    });
+
+    close?.addEventListener("click", closeNote);
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            closeNote();
+        }
     });
 }
 

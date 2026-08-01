@@ -32,8 +32,8 @@
     <link rel="preload" as="video" href="assets/awakening-film.mp4" type="video/mp4">
     <link rel="preload" as="image" href="assets/awakening-poster.png" fetchpriority="high">
     <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/brutalism.css?v=interactive-04">
-    <link rel="stylesheet" href="css/responsive.css?v=interactive-04">
+    <link rel="stylesheet" href="css/brutalism.css?v=interactive-05">
+    <link rel="stylesheet" href="css/responsive.css?v=interactive-05">
 </head>
 <body>
     <a class="skip-link" href="#dossier">К архивному досье</a>
@@ -129,20 +129,20 @@
 
         <section class="process-timeline" id="release-notes" aria-labelledby="release-notes-title">
             <header class="process-intro">
-                <span>[PROCESS LOG / 03]</span>
-                <h2 id="release-notes-title">FROM<br>SKETCH<br>TO SIGNAL</h2>
-                <p>Scroll through the four moments that turn a familiar silhouette into a collectible object.</p>
+                <span>[DROP NOTES / 03]</span>
+                <h2 id="release-notes-title">DROP<br>NOTES</h2>
+                <p>Four moments that explain how the pair moves from a familiar archive shape to its final identity.</p>
             </header>
             <div class="process-journey" id="processJourney" data-active-process="sketch">
                 <div class="process-stage" aria-live="polite">
-                    <div class="process-stage-image"><img id="processStageImage" src="assets/shoe-side-main-2x.png" alt="Sketch stage of the Air Jordan 1 Low"></div>
-                    <div class="process-stage-copy"><span id="processStageMeta">01 / SKETCH</span><h3 id="processStageTitle">THE BASELINE</h3><p id="processStageText">The familiar AJ1 Low profile is kept deliberately legible before the collaboration changes its visual centre of gravity.</p></div>
+                    <div class="process-stage-image"><img id="processStageImage" src="assets/shoe-side-main-2x.png" alt="Archive profile of the Air Jordan 1 Low"></div>
+                    <div class="process-stage-copy"><span id="processStageMeta">01 / ARCHIVE</span><h3 id="processStageTitle">THE BASE</h3><p id="processStageText">The familiar AJ1 Low profile is deliberately kept visible before the collaboration changes its visual centre of gravity.</p></div>
                 </div>
                 <div class="process-rail" aria-label="Design process timeline">
-                    <article class="process-step is-active" tabindex="0" data-process-key="sketch"><span>01</span><h3>SKETCH</h3><p>Archive proportions remain visible.</p></article>
-                    <article class="process-step" tabindex="0" data-process-key="sampling"><span>02</span><h3>SAMPLING</h3><p>Pink is tested as material, not decoration.</p></article>
-                    <article class="process-step" tabindex="0" data-process-key="prototype"><span>03</span><h3>PROTOTYPE</h3><p>Reverse Swoosh shifts the whole profile.</p></article>
-                    <article class="process-step" tabindex="0" data-process-key="release"><span>04</span><h3>RELEASE</h3><p>Co-branding seals the visual code.</p></article>
+                    <article class="process-step is-active" tabindex="0" data-process-key="sketch"><span>01</span><h3>ARCHIVE</h3><p>The Jordan 1 Low shape stays readable.</p></article>
+                    <article class="process-step" tabindex="0" data-process-key="sampling"><span>02</span><h3>COLOUR</h3><p>Pink is treated as a material temperature.</p></article>
+                    <article class="process-step" tabindex="0" data-process-key="prototype"><span>03</span><h3>REVERSE</h3><p>The Swoosh redirects the whole profile.</p></article>
+                    <article class="process-step" tabindex="0" data-process-key="release"><span>04</span><h3>RELEASE</h3><p>Marks, textures and sole lock the code.</p></article>
                 </div>
             </div>
         </section>
@@ -166,17 +166,16 @@
         </section>
 
         <section class="faq-reel" id="details" aria-labelledby="details-title">
-            <header class="faq-intro"><span>[FIELD NOTES / 05]</span><h2 id="details-title">DETAIL<br>CHECK</h2><p>Each answer is a visual record rather than a collapsed paragraph.</p></header>
-            <div class="faq-investigation" id="faqInvestigation" data-active-faq="swoosh">
-                <div class="faq-prompts" role="tablist" aria-label="Questions about the Travis Scott Air Jordan 1 Low">
-                    <button class="faq-prompt is-active" type="button" role="tab" aria-selected="true" data-faq-key="swoosh"><span>01</span>WHY REVERSE SWOOSH?</button>
-                    <button class="faq-prompt" type="button" role="tab" aria-selected="false" data-faq-key="pink"><span>02</span>WHY PINK PACK?</button>
-                    <button class="faq-prompt" type="button" role="tab" aria-selected="false" data-faq-key="release"><span>03</span>LIMITED RELEASE?</button>
-                    <button class="faq-prompt" type="button" role="tab" aria-selected="false" data-faq-key="materials"><span>04</span>MATERIALS?</button>
+            <header class="faq-intro"><span>[FIELD NOTES / 05]</span><h2 id="details-title">DETAIL<br>CHECK</h2><p>Three sealed questions. Open one record at a time.</p></header>
+            <div class="faq-investigation" id="faqInvestigation" data-answer-open="false">
+                <div class="faq-prompts" aria-label="Questions about the Travis Scott Air Jordan 1 Low">
+                    <button class="faq-prompt" type="button" aria-expanded="false" aria-controls="faqStory" data-faq-key="swoosh"><span>01 / QUERY</span>WHY REVERSE<br>SWOOSH?</button>
+                    <button class="faq-prompt" type="button" aria-expanded="false" aria-controls="faqStory" data-faq-key="pink"><span>02 / QUERY</span>WHY PINK<br>PACK?</button>
+                    <button class="faq-prompt" type="button" aria-expanded="false" aria-controls="faqStory" data-faq-key="release"><span>03 / QUERY</span>LIMITED<br>RELEASE?</button>
                 </div>
-                <article class="faq-story" aria-live="polite">
+                <article class="faq-story" id="faqStory" role="region" aria-live="polite" aria-hidden="true" hidden>
                     <div class="faq-story-media"><img id="faqStoryImage" src="assets/hf-side-a.png" alt="Reverse Swoosh detail"><span id="faqStoryType">PROFILE DETAIL</span></div>
-                    <div class="faq-story-copy"><span id="faqStoryMeta">01 / IDENTITY</span><h3 id="faqStoryTitle">REVERSE SWOOSH</h3><p id="faqStoryText">The oversized reversed mark is the collaboration's quickest visual signal. It changes the profile without abandoning the AJ1 Low base.</p></div>
+                    <div class="faq-story-copy"><span id="faqStoryMeta">01 / IDENTITY</span><h3 id="faqStoryTitle">REVERSE SWOOSH</h3><p id="faqStoryText">The oversized reversed mark is the collaboration's quickest visual signal. It changes the profile without abandoning the AJ1 Low base.</p><button class="faq-story-close" id="faqStoryClose" type="button">CLOSE RECORD <i aria-hidden="true">&times;</i></button></div>
                 </article>
             </div>
         </section>
@@ -192,11 +191,11 @@
     <script type="module" src="js/hero-video.js?v=interactive-04"></script>
     <script type="module" src="js/hero-motion.js?v=interactive-04"></script>
     <script type="module" src="js/dossier.js?v=interactive-04"></script>
-    <script type="module" src="js/collection.js?v=interactive-04"></script>
-    <script type="module" src="js/timeline.js?v=interactive-04"></script>
-    <script type="module" src="js/explore.js?v=interactive-04"></script>
-    <script type="module" src="js/faq-motion.js?v=interactive-04"></script>
-    <script type="module" src="js/finale.js?v=interactive-04"></script>
-    <script src="js/site-motion.js?v=interactive-04"></script>
+    <script type="module" src="js/collection.js?v=interactive-05"></script>
+    <script type="module" src="js/timeline.js?v=interactive-05"></script>
+    <script type="module" src="js/explore.js?v=interactive-05"></script>
+    <script type="module" src="js/faq-motion.js?v=interactive-05"></script>
+    <script type="module" src="js/finale.js?v=interactive-05"></script>
+    <script src="js/site-motion.js?v=interactive-05"></script>
 </body>
 </html>
