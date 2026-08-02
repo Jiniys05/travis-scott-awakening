@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://jiniys39.github.io/travis-scott-awakening/sitemap.xml

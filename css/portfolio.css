@@ -1,0 +1,370 @@
+:root {
+    --focus-ring: 0 0 0 3px rgba(245, 240, 232, 0.92), 0 0 0 7px rgba(244, 160, 184, 0.5);
+    --quiet-border: rgba(244, 160, 184, 0.42);
+    --section-wash: rgba(244, 160, 184, 0.06);
+}
+
+html {
+    scroll-padding-top: 24px;
+}
+
+body {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+button,
+a {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+:where(a, button, [tabindex]):focus-visible {
+    outline: 2px solid var(--sail);
+    outline-offset: 4px;
+    box-shadow: var(--focus-ring);
+}
+
+.section-depth::before {
+    opacity: var(--section-opacity, 0.06);
+    filter: none !important;
+    transform: translate3d(0, var(--section-y, 0), 0);
+    will-change: transform, opacity;
+}
+
+/* The film carries the movement. Ambient layers stay still so they never
+   compete for frames with the video or the user's input. */
+.noise-overlay,
+.tech-grid,
+.hero::before,
+.hero::after,
+.video-awakening-scene::before,
+.video-awakening-scene::after,
+.hero-video-stage::before,
+.hero-video-aura,
+.hero-video-reflection,
+.hero-ambient-light,
+.hero-scan-stack span,
+.video-awakening-scene.is-film-complete .hero-film {
+    animation: none !important;
+}
+
+.noise-overlay,
+.tech-grid,
+.hero-video-stage::before,
+.hero-video-aura,
+.hero-video-reflection {
+    mix-blend-mode: normal;
+    filter: none !important;
+}
+
+.noise-overlay {
+    opacity: 0.025;
+}
+
+.tech-grid {
+    opacity: 0.055;
+}
+
+.hero::before {
+    filter: none;
+    opacity: 0.2;
+}
+
+.hero::after,
+.video-awakening-scene::after {
+    opacity: 0.1;
+}
+
+.hero-video-stage::before {
+    opacity: 0.2;
+}
+
+.hero-film {
+    filter: none;
+    will-change: transform;
+}
+
+.video-awakening-scene[data-phase] .hero-video-aura {
+    opacity: 0.18;
+    transform: translate3d(calc(-50% + var(--scene-x) * 8px), calc(var(--scene-y) * 5px), 80px);
+}
+
+.video-awakening-scene[data-phase="cards"] .hero-video-reflection,
+.video-awakening-scene[data-phase="afterglow"] .hero-video-reflection {
+    opacity: 0.18;
+}
+
+.hero-dust-field span {
+    box-shadow: none;
+}
+
+@media (min-width: 761px) {
+    .dossier-deck,
+    .colour-museum,
+    .process-timeline,
+    .explore-shoe,
+    .faq-reel,
+    .final-scene {
+        content-visibility: auto;
+        contain-intrinsic-size: auto 900px;
+    }
+}
+
+/* Hero: fewer competing artifacts, stronger product clear space. */
+.video-awakening-scene::after {
+    opacity: 0.2;
+}
+
+.video-awakening-scene .title-top {
+    max-width: min(34vw, 450px);
+    text-shadow: 5px 6px 0 rgba(62, 39, 35, 0.78);
+}
+
+.video-awakening-scene .title-bottom {
+    background: rgba(10, 10, 10, 0.72);
+    backdrop-filter: none;
+}
+
+.hero-under-shoe {
+    border-top-color: rgba(244, 160, 184, 0.56);
+    background: linear-gradient(90deg, rgba(10, 10, 10, 0.76), transparent);
+}
+
+.hero-explore {
+    transition: color 220ms linear, background-color 220ms linear, transform 560ms var(--snap-ease), box-shadow 560ms var(--snap-ease);
+}
+
+.hero-explore:hover,
+.hero-explore:focus-visible {
+    transform: translate3d(0, -2px, 0);
+    box-shadow: 7px 7px 0 rgba(62, 39, 35, 0.76);
+}
+
+/* Dossier: treat the rail as a controlled editorial index, not four cards. */
+.dossier-stage::before {
+    inset: 22px;
+    border-style: solid;
+    border-color: rgba(245, 240, 232, 0.24);
+}
+
+.dossier-card {
+    transition: color 260ms linear, background-color 420ms var(--snap-ease), transform 620ms var(--snap-ease);
+}
+
+.dossier-card:focus-visible,
+.dossier-open:focus-visible,
+.dossier-close:focus-visible,
+.final-replay:focus-visible,
+.museum-marker:focus-visible,
+.process-step:focus-visible,
+.shoe-hotspot:focus-visible,
+.faq-prompt:focus-visible,
+.faq-story-close:focus-visible {
+    outline: 2px solid var(--sail);
+    outline-offset: -5px;
+    box-shadow: inset 0 0 0 1px var(--black), var(--focus-ring);
+}
+
+.dossier-card:hover,
+.dossier-card:focus-visible {
+    transform: translate3d(0, -3px, 0);
+}
+
+.dossier-stage-media::after {
+    opacity: 0.66;
+    transition: transform 900ms var(--snap-ease), opacity 520ms linear;
+}
+
+.dossier-card.is-active + .dossier-card,
+.dossier-card:hover + .dossier-card {
+    border-left-color: rgba(245, 240, 232, 0.22);
+}
+
+.dossier-constellation.is-expanded .dossier-stage {
+    will-change: clip-path, transform;
+}
+
+.dossier-constellation.is-expanded .dossier-open {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.dossier-close {
+    min-width: 44px;
+    min-height: 44px;
+}
+
+/* Colour studies: the active colour gets the room; the controls stay quiet. */
+.colour-museum-stage {
+    transition: background-color 760ms var(--snap-ease);
+}
+
+.museum-shoe {
+    transition: opacity 180ms linear, transform 820ms var(--snap-ease), filter 820ms var(--snap-ease);
+}
+
+.museum-shoe.is-active {
+    filter: drop-shadow(24px 30px 0 rgba(10, 10, 10, 0.48)) saturate(1.03);
+}
+
+.museum-marker {
+    transition: color 220ms linear, background-color 520ms var(--snap-ease), transform 520ms var(--snap-ease);
+}
+
+.museum-marker:hover,
+.museum-marker:focus-visible {
+    transform: translate3d(0, -2px, 0);
+}
+
+/* Drop notes: controls now behave and read like a real timeline. */
+.process-step {
+    width: 100%;
+    border: 0;
+    border-bottom: 1px solid rgba(244, 160, 184, 0.38);
+    background: transparent;
+    font: inherit;
+    text-align: left;
+}
+
+.process-step:focus-visible {
+    outline-offset: -4px;
+}
+
+.process-stage {
+    position: sticky;
+    top: clamp(28px, 6vh, 72px);
+}
+
+.process-journey.is-pinned .process-stage,
+.process-journey.is-pinned .process-rail {
+    position: sticky;
+    top: clamp(28px, 6vh, 72px);
+    left: auto;
+    width: auto;
+}
+
+.process-step:hover,
+.process-step:focus-visible {
+    transform: translate3d(5px, 0, 0);
+}
+
+/* Explore: a hotspot is a reachable control, with a label only on intent. */
+.shoe-hotspot {
+    width: 44px;
+    height: 44px;
+    transition: background-color 220ms linear, color 220ms linear, box-shadow 620ms var(--snap-ease), transform 620ms var(--snap-ease);
+}
+
+.shoe-hotspot::after {
+    content: attr(data-hotspot-label);
+    position: absolute;
+    left: calc(100% + 12px);
+    top: 50%;
+    width: max-content;
+    max-width: 148px;
+    padding: 6px 8px;
+    border: 1px solid var(--quiet-border);
+    background: rgba(10, 10, 10, 0.9);
+    color: var(--sail);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: 0.9px;
+    line-height: 1.1;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate3d(-6px, -50%, 0);
+    transition: opacity 220ms linear, transform 420ms var(--snap-ease);
+}
+
+.shoe-hotspot:hover::after,
+.shoe-hotspot:focus-visible::after {
+    opacity: 1;
+    transform: translate3d(0, -50%, 0);
+}
+
+.shoe-hotspot:hover,
+.shoe-hotspot:focus-visible,
+.shoe-hotspot.is-active {
+    transform: translate(-50%, -50%) scale(1.04);
+}
+
+.explore-console[data-active-part="heel"] .shoe-hotspot[data-part-key="heel"]::after,
+.explore-console[data-active-part="toe"] .shoe-hotspot[data-part-key="toe"]::after {
+    left: auto;
+    right: calc(100% + 12px);
+    transform: translate3d(6px, -50%, 0);
+}
+
+.explore-console[data-active-part="heel"] .shoe-hotspot[data-part-key="heel"]:is(:hover, :focus-visible)::after,
+.explore-console[data-active-part="toe"] .shoe-hotspot[data-part-key="toe"]:is(:hover, :focus-visible)::after {
+    transform: translate3d(0, -50%, 0);
+}
+
+/* Finale: preserve the calm ending instead of adding more interface. */
+.final-copy {
+    max-width: 500px;
+}
+
+.final-copy p {
+    color: rgba(245, 240, 232, 0.86);
+}
+
+.final-replay {
+    transition: color 220ms linear, background-color 220ms linear, transform 620ms var(--snap-ease), box-shadow 620ms var(--snap-ease);
+}
+
+@media (max-width: 760px) {
+    .video-awakening-scene .title-top {
+        max-width: 62vw;
+        text-shadow: 4px 5px 0 rgba(62, 39, 35, 0.76);
+    }
+
+    .hero-under-shoe {
+        background: linear-gradient(90deg, rgba(10, 10, 10, 0.78), rgba(10, 10, 10, 0.14));
+    }
+
+    .dossier-stage::before {
+        inset: 14px;
+    }
+
+    .process-step {
+        min-height: 270px;
+    }
+
+    .process-stage,
+    .process-journey.is-pinned .process-stage,
+    .process-journey.is-pinned .process-rail {
+        position: relative;
+        top: auto;
+        left: auto;
+        width: auto;
+    }
+
+    .shoe-hotspot::after,
+    .shoe-hotspot.is-active::after {
+        display: none;
+    }
+
+    .final-copy {
+        max-width: calc(100% - 44px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .section-depth::before,
+    .hero-explore,
+    .dossier-card,
+    .dossier-stage-media::after,
+    .museum-shoe,
+    .museum-marker,
+    .process-step,
+    .shoe-hotspot,
+    .shoe-hotspot::after,
+    .final-replay {
+        transition-duration: 1ms !important;
+        animation: none !important;
+    }
+}

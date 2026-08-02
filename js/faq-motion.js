@@ -49,19 +49,6 @@ function initFieldNotes() {
     let pointerFrame = 0;
     let pointerTarget = null;
 
-    const warmRecordMedia = () => {
-        Object.values(FIELD_NOTES).forEach(({ image: source }) => {
-            const asset = new Image();
-            asset.src = source;
-        });
-    };
-
-    if ("requestIdleCallback" in window) {
-        window.requestIdleCallback(warmRecordMedia, { timeout: 1200 });
-    } else {
-        window.setTimeout(warmRecordMedia, 480);
-    }
-
     const setPromptState = () => {
         root.dataset.activeRecord = activeKey || "";
         prompts.forEach((prompt) => {
@@ -73,6 +60,7 @@ function initFieldNotes() {
 
     const renderNote = (note, key, animate) => {
         const applyContent = () => {
+            image.decoding = "async";
             image.src = note.image;
             image.alt = note.alt;
             type.textContent = note.type;

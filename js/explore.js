@@ -29,6 +29,9 @@ const SHOE_PARTS = {
     }
 };
 
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+const SWAP_DELAY = 135;
+
 function initExplorer() {
     const root = document.getElementById("exploreConsole");
     if (!root) {
@@ -44,37 +47,73 @@ function initExplorer() {
     let activeKey = "toe";
     let swapTimer = 0;
 
-    const selectPart = (key) => {
+    const setControlState = () => {
+        controls.forEach((control) => {
+            const selected = control.dataset.partKey === activeKey;
+            control.classList.toggle("is-active", selected);
+            control.setAttribute("aria-pressed", String(selected));
+        });
+    };
+
+    const applyPart = (part) => {
+        image.decoding = "async";
+        image.src = part.image;
+        image.alt = part.alt;
+        meta.textContent = part.meta;
+        title.textContent = part.title;
+        text.textContent = part.text;
+        inspector.classList.remove("is-swapping");
+    };
+
+    const selectPart = (key, { animate = true } = {}) => {
         const part = SHOE_PARTS[key];
         if (!part) {
             return;
         }
 
+        const changed = key !== activeKey;
+        activeKey = key;
         root.dataset.activePart = key;
-        controls.forEach((control) => control.classList.toggle("is-active", control.dataset.partKey === key));
-        if (key === activeKey) {
+        setControlState();
+        if (!changed) {
             return;
         }
 
-        activeKey = key;
         window.clearTimeout(swapTimer);
+        if (!animate || reducedMotion.matches) {
+            applyPart(part);
+            return;
+        }
+
         inspector.classList.add("is-swapping");
-        swapTimer = window.setTimeout(() => {
-            image.src = part.image;
-            image.alt = part.alt;
-            meta.textContent = part.meta;
-            title.textContent = part.title;
-            text.textContent = part.text;
-            inspector.classList.remove("is-swapping");
-        }, 135);
+        swapTimer = window.setTimeout(() => applyPart(part), SWAP_DELAY);
     };
 
-    controls.forEach((control) => {
+    controls.forEach((control, index) => {
         const key = control.dataset.partKey;
         control.addEventListener("click", () => selectPart(key));
         control.addEventListener("focus", () => selectPart(key));
-        control.addEventListener("pointerenter", () => selectPart(key), { passive: true });
+        control.addEventListener("keydown", (event) => {
+            const keyMap = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
+            if (event.key === "Home") {
+                event.preventDefault();
+                controls[0].focus();
+                return;
+            }
+            if (event.key === "End") {
+                event.preventDefault();
+                controls[controls.length - 1].focus();
+                return;
+            }
+            if (!(event.key in keyMap)) {
+                return;
+            }
+            event.preventDefault();
+            controls[(index + keyMap[event.key] + controls.length) % controls.length].focus();
+        });
     });
+
+    selectPart(activeKey, { animate: false });
 }
 
 window.addEventListener("DOMContentLoaded", initExplorer);

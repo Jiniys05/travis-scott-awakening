@@ -29,6 +29,9 @@ const PROCESS_STEPS = {
     }
 };
 
+const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+const SWAP_DELAY = 140;
+
 function initTimeline() {
     const root = document.getElementById("processJourney");
     if (!root) {
@@ -36,11 +39,11 @@ function initTimeline() {
     }
 
     const steps = [...root.querySelectorAll(".process-step")];
+    const stage = document.getElementById("processStage");
     const image = document.getElementById("processStageImage");
     const meta = document.getElementById("processStageMeta");
     const title = document.getElementById("processStageTitle");
     const text = document.getElementById("processStageText");
-    const stage = root.querySelector(".process-stage");
     let activeKey = "sketch";
     let swapTimer = 0;
 
@@ -49,6 +52,7 @@ function initTimeline() {
         if (!item) {
             return;
         }
+
         const visual = document.createElement("img");
         visual.className = "process-step-visual";
         visual.src = item.image;
@@ -58,75 +62,91 @@ function initTimeline() {
         step.append(visual);
     });
 
-    const selectStep = (key) => {
+    const setStepState = () => {
+        steps.forEach((step) => {
+            const selected = step.dataset.processKey === activeKey;
+            step.classList.toggle("is-active", selected);
+            step.setAttribute("aria-selected", String(selected));
+            step.tabIndex = selected ? 0 : -1;
+        });
+        stage.setAttribute("aria-labelledby", `process-${activeKey}`);
+    };
+
+    const applyStage = (item) => {
+        image.src = item.image;
+        image.alt = item.alt;
+        meta.textContent = item.meta;
+        title.textContent = item.title;
+        text.textContent = item.text;
+        stage.classList.remove("is-swapping");
+    };
+
+    const selectStep = (key, { animate = true } = {}) => {
         const item = PROCESS_STEPS[key];
-        if (!item || key === activeKey) {
+        if (!item) {
             return;
         }
 
+        const changed = activeKey !== key;
         activeKey = key;
         root.dataset.activeProcess = key;
-        steps.forEach((step) => step.classList.toggle("is-active", step.dataset.processKey === key));
+        setStepState();
+        if (!changed) {
+            return;
+        }
+
         window.clearTimeout(swapTimer);
+        if (!animate || reducedMotion.matches) {
+            applyStage(item);
+            return;
+        }
+
         stage.classList.add("is-swapping");
-        swapTimer = window.setTimeout(() => {
-            image.src = item.image;
-            image.alt = item.alt;
-            meta.textContent = item.meta;
-            title.textContent = item.title;
-            text.textContent = item.text;
-            stage.classList.remove("is-swapping");
-        }, 140);
+        swapTimer = window.setTimeout(() => applyStage(item), SWAP_DELAY);
     };
 
-    steps.forEach((step) => {
+    const focusStep = (index, direction) => {
+        steps[(index + direction + steps.length) % steps.length].focus();
+    };
+
+    steps.forEach((step, index) => {
         const key = step.dataset.processKey;
         step.addEventListener("click", () => selectStep(key));
         step.addEventListener("focus", () => selectStep(key));
+        step.addEventListener("keydown", (event) => {
+            const keyMap = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 };
+            if (event.key === "Home") {
+                event.preventDefault();
+                steps[0].focus();
+                return;
+            }
+            if (event.key === "End") {
+                event.preventDefault();
+                steps[steps.length - 1].focus();
+                return;
+            }
+            if (!(event.key in keyMap)) {
+                return;
+            }
+            event.preventDefault();
+            focusStep(index, keyMap[event.key]);
+        });
     });
 
     if ("IntersectionObserver" in window) {
         const observer = new IntersectionObserver((entries) => {
-            entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio).forEach((entry) => selectStep(entry.target.dataset.processKey));
-        }, { threshold: [0.4, 0.65], rootMargin: "-20% 0px -32% 0px" });
+            const visible = entries
+                .filter((entry) => entry.isIntersecting)
+                .sort((first, second) => second.intersectionRatio - first.intersectionRatio)[0];
+            if (visible) {
+                selectStep(visible.target.dataset.processKey);
+            }
+        }, { threshold: [0.45, 0.7], rootMargin: "-18% 0px -34% 0px" });
+
         steps.forEach((step) => observer.observe(step));
     }
 
-    const desktopQuery = window.matchMedia("(min-width: 761px)");
-    let pinFrame = 0;
-
-    const updatePin = () => {
-        pinFrame = 0;
-        if (!desktopQuery.matches || document.hidden) {
-            root.classList.remove("is-pinned");
-            return;
-        }
-
-        const pinTop = Math.round(Math.max(28, window.innerHeight * 0.06));
-        const journeyRect = root.getBoundingClientRect();
-        const stageRect = stage.getBoundingClientRect();
-        const shouldPin = journeyRect.top <= pinTop && journeyRect.bottom > pinTop + stageRect.height + 18;
-
-        if (shouldPin && !root.classList.contains("is-pinned")) {
-            root.style.setProperty("--process-stage-top", `${pinTop}px`);
-            root.style.setProperty("--process-stage-left", `${Math.round(stageRect.left)}px`);
-            root.style.setProperty("--process-stage-width", `${Math.round(stageRect.width)}px`);
-            root.classList.add("is-pinned");
-        } else if (!shouldPin && root.classList.contains("is-pinned")) {
-            root.classList.remove("is-pinned");
-        }
-    };
-
-    const schedulePin = () => {
-        if (!pinFrame) {
-            pinFrame = requestAnimationFrame(updatePin);
-        }
-    };
-
-    window.addEventListener("scroll", schedulePin, { passive: true });
-    window.addEventListener("resize", schedulePin, { passive: true });
-    desktopQuery.addEventListener?.("change", schedulePin);
-    schedulePin();
+    selectStep(activeKey, { animate: false });
 }
 
 window.addEventListener("DOMContentLoaded", initTimeline);

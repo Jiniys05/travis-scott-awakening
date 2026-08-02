@@ -51,29 +51,47 @@ function renderMuseum(root) {
         <div class="colour-museum-stage" data-active-colour="${initial.id}" style="--museum-glow:${initial.glow};--museum-field:${initial.field};--museum-camera:${initial.camera}">
             <div class="museum-sky" aria-hidden="true"></div>
             <div class="museum-plinth" aria-hidden="true"><i></i><i></i></div>
-            <div class="museum-product" aria-live="polite">
-                ${COLOUR_STUDIES.map((study, index) => `<img class="museum-shoe${index === 0 ? " is-active" : ""}" data-colour-image="${study.id}" src="${study.image}" alt="${study.alt}" loading="lazy" decoding="async">`).join("")}
+            <div class="museum-product" id="colourPanel" role="tabpanel" aria-labelledby="colour-${initial.id}">
+                ${COLOUR_STUDIES.map((study, index) => `<img class="museum-shoe${index === 0 ? " is-active" : ""}" data-colour-image="${study.id}" data-alt="${study.alt}" src="${study.image}" alt="${index === 0 ? study.alt : ""}" aria-hidden="${index !== 0}" loading="lazy" decoding="async">`).join("")}
             </div>
-            <div class="museum-copy">
+            <div class="museum-copy" aria-live="polite">
                 <span id="museumCode">${initial.code}</span><h3 id="museumTitle">${initial.name}</h3><p id="museumNote">${initial.note}</p>
             </div>
             <div class="museum-rail" role="tablist" aria-label="Colour studies">
-                ${COLOUR_STUDIES.map((study, index) => `<button class="museum-marker${index === 0 ? " is-active" : ""}" type="button" role="tab" aria-selected="${index === 0}" data-colour-key="${study.id}"><span>${String(index + 1).padStart(2, "0")}</span><strong>${study.name}</strong></button>`).join("")}
+                ${COLOUR_STUDIES.map((study, index) => `<button class="museum-marker${index === 0 ? " is-active" : ""}" id="colour-${study.id}" type="button" role="tab" aria-controls="colourPanel" aria-selected="${index === 0}" tabindex="${index === 0 ? 0 : -1}" data-colour-key="${study.id}"><span>${String(index + 1).padStart(2, "0")}</span><strong>${study.name}</strong></button>`).join("")}
             </div>
         </div>
     `;
 
     const stage = root.querySelector(".colour-museum-stage");
+    const panel = root.querySelector("#colourPanel");
     const buttons = [...root.querySelectorAll(".museum-marker")];
     const images = [...root.querySelectorAll(".museum-shoe")];
     const code = root.querySelector("#museumCode");
     const title = root.querySelector("#museumTitle");
     const note = root.querySelector("#museumNote");
     let activeId = initial.id;
+    let hoverTimer = 0;
+
+    const preloadStudies = () => {
+        if (navigator.connection?.saveData) {
+            return;
+        }
+        COLOUR_STUDIES.slice(1).forEach(({ image: source }) => {
+            const asset = new Image();
+            asset.src = source;
+        });
+    };
+
+    if ("requestIdleCallback" in window) {
+        window.requestIdleCallback(preloadStudies, { timeout: 2200 });
+    } else {
+        window.setTimeout(preloadStudies, 1200);
+    }
 
     const selectStudy = (id) => {
         const study = COLOUR_STUDIES.find((item) => item.id === id);
-        if (!study || id === activeId) {
+        if (!study) {
             return;
         }
 
@@ -82,30 +100,54 @@ function renderMuseum(root) {
         stage.style.setProperty("--museum-glow", study.glow);
         stage.style.setProperty("--museum-field", study.field);
         stage.style.setProperty("--museum-camera", study.camera);
+        panel.setAttribute("aria-labelledby", `colour-${id}`);
         buttons.forEach((button) => {
             const selected = button.dataset.colourKey === id;
             button.classList.toggle("is-active", selected);
             button.setAttribute("aria-selected", String(selected));
+            button.tabIndex = selected ? 0 : -1;
         });
-        images.forEach((image) => image.classList.toggle("is-active", image.dataset.colourImage === id));
+        images.forEach((image) => {
+            const selected = image.dataset.colourImage === id;
+            image.classList.toggle("is-active", selected);
+            image.setAttribute("aria-hidden", String(!selected));
+            image.alt = selected ? image.dataset.alt : "";
+        });
         code.textContent = study.code;
         title.textContent = study.name;
         note.textContent = study.note;
     };
 
+    const moveFocus = (index, direction) => {
+        buttons[(index + direction + buttons.length) % buttons.length].focus();
+    };
+
     buttons.forEach((button, index) => {
         const id = button.dataset.colourKey;
-        button.addEventListener("pointerenter", () => selectStudy(id), { passive: true });
+        button.addEventListener("pointerenter", () => {
+            window.clearTimeout(hoverTimer);
+            hoverTimer = window.setTimeout(() => selectStudy(id), 90);
+        }, { passive: true });
+        button.addEventListener("pointerleave", () => window.clearTimeout(hoverTimer), { passive: true });
         button.addEventListener("focus", () => selectStudy(id));
         button.addEventListener("click", () => selectStudy(id));
         button.addEventListener("keydown", (event) => {
-            if (!['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft'].includes(event.key)) {
+            const keyMap = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 };
+            if (event.key === "Home") {
+                event.preventDefault();
+                buttons[0].focus();
+                return;
+            }
+            if (event.key === "End") {
+                event.preventDefault();
+                buttons[buttons.length - 1].focus();
+                return;
+            }
+            if (!(event.key in keyMap)) {
                 return;
             }
             event.preventDefault();
-            const direction = ['ArrowDown', 'ArrowRight'].includes(event.key) ? 1 : -1;
-            const nextIndex = (index + direction + buttons.length) % buttons.length;
-            buttons[nextIndex].focus();
+            moveFocus(index, keyMap[event.key]);
         });
     });
 }

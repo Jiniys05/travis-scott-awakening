@@ -75,6 +75,7 @@ function bootHeroVideo() {
     bindPointer(scene);
 
     let hasCompleted = false;
+    let sceneIsVisible = true;
 
     const update = () => {
         const sceneTime = Math.max(0, video.currentTime || 0);
@@ -96,7 +97,7 @@ function bootHeroVideo() {
     };
 
     const tryPlay = () => {
-        if (document.hidden || hasCompleted) {
+        if (document.hidden || hasCompleted || !sceneIsVisible) {
             return;
         }
         const playback = video.play();
@@ -118,6 +119,18 @@ function bootHeroVideo() {
     video.addEventListener("ended", finish);
     video.addEventListener("error", failGracefully);
 
+    if ("IntersectionObserver" in window) {
+        const sceneObserver = new IntersectionObserver(([entry]) => {
+            sceneIsVisible = entry.isIntersecting;
+            if (sceneIsVisible) {
+                tryPlay();
+            } else if (!video.paused && !video.ended) {
+                video.pause();
+            }
+        }, { threshold: 0.08 });
+        sceneObserver.observe(scene);
+    }
+
     window.addEventListener("hero:replay", () => {
         hasCompleted = false;
         scene.classList.remove("is-film-complete", "is-film-waiting");
@@ -129,6 +142,9 @@ function bootHeroVideo() {
 
     document.addEventListener("visibilitychange", () => {
         if (document.hidden) {
+            if (!video.paused && !video.ended) {
+                video.pause();
+            }
             return;
         }
         if (!video.ended) {
