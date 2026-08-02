@@ -32,8 +32,8 @@
     <link rel="preload" as="video" href="assets/awakening-film.mp4" type="video/mp4">
     <link rel="preload" as="image" href="assets/awakening-poster.png" fetchpriority="high">
     <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/brutalism.css?v=interactive-05">
-    <link rel="stylesheet" href="css/responsive.css?v=interactive-05">
+    <link rel="stylesheet" href="css/brutalism.css?v=interactive-07">
+    <link rel="stylesheet" href="css/responsive.css?v=interactive-06">
 </head>
 <body>
     <a class="skip-link" href="#dossier">К архивному досье</a>
@@ -166,16 +166,23 @@
         </section>
 
         <section class="faq-reel" id="details" aria-labelledby="details-title">
-            <header class="faq-intro"><span>[FIELD NOTES / 05]</span><h2 id="details-title">DETAIL<br>CHECK</h2><p>Three sealed questions. Open one record at a time.</p></header>
+            <header class="faq-intro"><span>[FIELD NOTES / 05]</span><h2 id="details-title">DETAIL<br>CHECK</h2><p>Three sealed records. Open one answer at a time.</p></header>
             <div class="faq-investigation" id="faqInvestigation" data-answer-open="false">
                 <div class="faq-prompts" aria-label="Questions about the Travis Scott Air Jordan 1 Low">
-                    <button class="faq-prompt" type="button" aria-expanded="false" aria-controls="faqStory" data-faq-key="swoosh"><span>01 / QUERY</span>WHY REVERSE<br>SWOOSH?</button>
-                    <button class="faq-prompt" type="button" aria-expanded="false" aria-controls="faqStory" data-faq-key="pink"><span>02 / QUERY</span>WHY PINK<br>PACK?</button>
-                    <button class="faq-prompt" type="button" aria-expanded="false" aria-controls="faqStory" data-faq-key="release"><span>03 / QUERY</span>LIMITED<br>RELEASE?</button>
+                    <button class="faq-prompt" type="button" aria-expanded="false" aria-controls="faqStory" data-faq-key="swoosh">
+                        <span class="faq-prompt-index">01</span><span class="faq-prompt-kicker">IDENTITY / RECORD</span><span class="faq-prompt-question">WHY REVERSE<br>SWOOSH?</span><span class="faq-prompt-control" aria-hidden="true"></span>
+                    </button>
+                    <button class="faq-prompt" type="button" aria-expanded="false" aria-controls="faqStory" data-faq-key="pink">
+                        <span class="faq-prompt-index">02</span><span class="faq-prompt-kicker">COLOUR / RECORD</span><span class="faq-prompt-question">WHY PINK<br>PACK?</span><span class="faq-prompt-control" aria-hidden="true"></span>
+                    </button>
+                    <button class="faq-prompt" type="button" aria-expanded="false" aria-controls="faqStory" data-faq-key="release">
+                        <span class="faq-prompt-index">03</span><span class="faq-prompt-kicker">RELEASE / RECORD</span><span class="faq-prompt-question">LIMITED<br>RELEASE?</span><span class="faq-prompt-control" aria-hidden="true"></span>
+                    </button>
                 </div>
-                <article class="faq-story" id="faqStory" role="region" aria-live="polite" aria-hidden="true" hidden>
-                    <div class="faq-story-media"><img id="faqStoryImage" src="assets/hf-side-a.png" alt="Reverse Swoosh detail"><span id="faqStoryType">PROFILE DETAIL</span></div>
-                    <div class="faq-story-copy"><span id="faqStoryMeta">01 / IDENTITY</span><h3 id="faqStoryTitle">REVERSE SWOOSH</h3><p id="faqStoryText">The oversized reversed mark is the collaboration's quickest visual signal. It changes the profile without abandoning the AJ1 Low base.</p><button class="faq-story-close" id="faqStoryClose" type="button">CLOSE RECORD <i aria-hidden="true">&times;</i></button></div>
+                <article class="faq-story" id="faqStory" role="region" aria-live="polite" aria-hidden="true" aria-labelledby="faqStoryTitle" tabindex="-1" hidden>
+                    <div class="faq-story-status" aria-hidden="true"><span>ACTIVE RECORD</span><span id="faqStoryProgress">01 / 03</span></div>
+                    <div class="faq-story-media"><img id="faqStoryImage" src="assets/hf-side-a.png" alt="Reverse Swoosh detail" decoding="async"><span id="faqStoryType">PROFILE DETAIL</span></div>
+                    <div class="faq-story-copy"><span id="faqStoryMeta">01 / IDENTITY</span><h3 id="faqStoryTitle">REVERSE SWOOSH</h3><p id="faqStoryText">The oversized reversed mark is the collaboration's quickest visual signal. It changes the profile without abandoning the AJ1 Low base.</p><button class="faq-story-close" id="faqStoryClose" type="button" aria-label="Close Reverse Swoosh record">CLOSE RECORD <i aria-hidden="true">&times;</i></button></div>
                 </article>
             </div>
         </section>
@@ -194,7 +201,7 @@
     <script type="module" src="js/collection.js?v=interactive-05"></script>
     <script type="module" src="js/timeline.js?v=interactive-05"></script>
     <script type="module" src="js/explore.js?v=interactive-05"></script>
-    <script type="module" src="js/faq-motion.js?v=interactive-05"></script>
+    <script type="module" src="js/faq-motion.js?v=interactive-07"></script>
     <script type="module" src="js/finale.js?v=interactive-05"></script>
     <script src="js/site-motion.js?v=interactive-05"></script>
 </body>
