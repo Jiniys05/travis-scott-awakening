@@ -118,8 +118,21 @@ a {
 }
 
 .video-awakening-scene .title-top {
-    max-width: min(34vw, 450px);
+    width: max-content;
+    max-width: none;
+    overflow: visible;
+    text-wrap: nowrap;
+    line-height: 0.78;
+    padding-bottom: 12px;
     text-shadow: 5px 6px 0 rgba(62, 39, 35, 0.78);
+}
+
+.video-awakening-scene .title-top::before {
+    text-shadow: none;
+}
+
+.video-awakening-scene .title-top .title-line {
+    overflow: visible;
 }
 
 .video-awakening-scene .title-bottom {
@@ -318,7 +331,8 @@ a {
 
 @media (max-width: 760px) {
     .video-awakening-scene .title-top {
-        max-width: 62vw;
+        width: max-content;
+        max-width: calc(100vw - 40px);
         text-shadow: 4px 5px 0 rgba(62, 39, 35, 0.76);
     }
 

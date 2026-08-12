@@ -1,3 +1,5 @@
+const ASSET_REVISION = "portfolio-02";
+
 const COLOUR_STUDIES = [
     {
         id: "shy",
@@ -45,6 +47,27 @@ const COLOUR_STUDIES = [
     }
 ];
 
+function assetUrl(path) {
+    return `${path}?v=${ASSET_REVISION}`;
+}
+
+function preloadImage(source) {
+    return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.decoding = "async";
+        image.onload = async () => {
+            try {
+                await image.decode();
+            } catch {
+                // The image is still safe to display when decode is unavailable.
+            }
+            resolve();
+        };
+        image.onerror = reject;
+        image.src = source;
+    });
+}
+
 function renderMuseum(root) {
     const initial = COLOUR_STUDIES[0];
     root.innerHTML = `
@@ -52,7 +75,7 @@ function renderMuseum(root) {
             <div class="museum-sky" aria-hidden="true"></div>
             <div class="museum-plinth" aria-hidden="true"><i></i><i></i></div>
             <div class="museum-product" id="colourPanel" role="tabpanel" aria-labelledby="colour-${initial.id}">
-                ${COLOUR_STUDIES.map((study, index) => `<img class="museum-shoe${index === 0 ? " is-active" : ""}" data-colour-image="${study.id}" data-alt="${study.alt}" src="${study.image}" alt="${index === 0 ? study.alt : ""}" aria-hidden="${index !== 0}" loading="lazy" decoding="async">`).join("")}
+                <img class="museum-shoe is-active" id="museumShoe" src="${assetUrl(initial.image)}" alt="${initial.alt}" decoding="async" fetchpriority="high">
             </div>
             <div class="museum-copy" aria-live="polite">
                 <span id="museumCode">${initial.code}</span><h3 id="museumTitle">${initial.name}</h3><p id="museumNote">${initial.note}</p>
@@ -65,22 +88,21 @@ function renderMuseum(root) {
 
     const stage = root.querySelector(".colour-museum-stage");
     const panel = root.querySelector("#colourPanel");
+    const shoe = root.querySelector("#museumShoe");
     const buttons = [...root.querySelectorAll(".museum-marker")];
-    const images = [...root.querySelectorAll(".museum-shoe")];
     const code = root.querySelector("#museumCode");
     const title = root.querySelector("#museumTitle");
     const note = root.querySelector("#museumNote");
     let activeId = initial.id;
+    let pendingId = null;
     let hoverTimer = 0;
+    let requestId = 0;
 
     const preloadStudies = () => {
         if (navigator.connection?.saveData) {
             return;
         }
-        COLOUR_STUDIES.slice(1).forEach(({ image: source }) => {
-            const asset = new Image();
-            asset.src = source;
-        });
+        COLOUR_STUDIES.slice(1).forEach(({ image }) => preloadImage(assetUrl(image)).catch(() => {}));
     };
 
     if ("requestIdleCallback" in window) {
@@ -89,33 +111,58 @@ function renderMuseum(root) {
         window.setTimeout(preloadStudies, 1200);
     }
 
-    const selectStudy = (id) => {
-        const study = COLOUR_STUDIES.find((item) => item.id === id);
-        if (!study) {
-            return;
-        }
-
-        activeId = id;
-        stage.dataset.activeColour = id;
+    const updateControls = (study) => {
+        activeId = study.id;
+        stage.dataset.activeColour = study.id;
         stage.style.setProperty("--museum-glow", study.glow);
         stage.style.setProperty("--museum-field", study.field);
         stage.style.setProperty("--museum-camera", study.camera);
-        panel.setAttribute("aria-labelledby", `colour-${id}`);
+        panel.setAttribute("aria-labelledby", `colour-${study.id}`);
         buttons.forEach((button) => {
-            const selected = button.dataset.colourKey === id;
+            const selected = button.dataset.colourKey === study.id;
             button.classList.toggle("is-active", selected);
             button.setAttribute("aria-selected", String(selected));
             button.tabIndex = selected ? 0 : -1;
         });
-        images.forEach((image) => {
-            const selected = image.dataset.colourImage === id;
-            image.classList.toggle("is-active", selected);
-            image.setAttribute("aria-hidden", String(!selected));
-            image.alt = selected ? image.dataset.alt : "";
-        });
         code.textContent = study.code;
         title.textContent = study.name;
         note.textContent = study.note;
+    };
+
+    const selectStudy = async (id) => {
+        const study = COLOUR_STUDIES.find((item) => item.id === id);
+        if (!study || study.id === activeId || study.id === pendingId) {
+            return;
+        }
+
+        const selection = ++requestId;
+        pendingId = study.id;
+        stage.classList.add("is-image-switching");
+
+        try {
+            await preloadImage(assetUrl(study.image));
+            if (selection !== requestId) {
+                return;
+            }
+
+            shoe.classList.remove("is-active");
+            window.setTimeout(() => {
+                if (selection !== requestId) {
+                    return;
+                }
+                shoe.src = assetUrl(study.image);
+                shoe.alt = study.alt;
+                updateControls(study);
+                pendingId = null;
+                stage.classList.remove("is-image-switching");
+                requestAnimationFrame(() => shoe.classList.add("is-active"));
+            }, 130);
+        } catch {
+            if (selection === requestId) {
+                pendingId = null;
+                stage.classList.remove("is-image-switching");
+            }
+        }
     };
 
     const moveFocus = (index, direction) => {
