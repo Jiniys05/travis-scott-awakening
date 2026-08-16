@@ -127,7 +127,7 @@ function initFieldNotes() {
         }
 
         if (key === activeKey && root.dataset.answerOpen === "true") {
-            closeNote({ returnFocus: false });
+            story.focus({ preventScroll: true });
             return;
         }
 

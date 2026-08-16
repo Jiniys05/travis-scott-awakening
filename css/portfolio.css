@@ -231,6 +231,28 @@ a {
     transform: translate3d(0, -2px, 0);
 }
 
+/* Detail Check behaves as a single-answer quiz: questions are quiet until chosen. */
+.faq-investigation[data-answer-open="false"] .faq-prompt {
+    cursor: pointer;
+}
+
+.faq-investigation[data-answer-open="true"] .faq-prompt:not(.is-active) {
+    color: rgba(245, 240, 232, 0.58);
+}
+
+.faq-investigation[data-answer-open="true"] .faq-prompt:not(.is-active):hover,
+.faq-investigation[data-answer-open="true"] .faq-prompt:not(.is-active):focus-visible {
+    color: var(--sail);
+}
+
+.faq-investigation[data-answer-open="true"] .faq-prompt.is-active {
+    cursor: default;
+}
+
+.faq-story-close {
+    min-height: 44px;
+}
+
 /* Drop notes: controls now behave and read like a real timeline. */
 .process-step {
     width: 100%;
