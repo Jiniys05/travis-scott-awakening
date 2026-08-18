@@ -38,12 +38,12 @@
         }
     </script>
     <link rel="preload" as="image" href="assets/awakening-poster.png" fetchpriority="high">
-    <link rel="stylesheet" href="css/reset.css?v=faq-quiz-03">
-    <link rel="stylesheet" href="css/brutalism.css?v=faq-quiz-03">
-    <link rel="stylesheet" href="css/responsive.css?v=faq-quiz-03">
-    <link rel="stylesheet" href="css/portfolio.css?v=faq-quiz-03">
+    <link rel="stylesheet" href="css/reset.css?v=faq-quiz-04">
+    <link rel="stylesheet" href="css/brutalism.css?v=faq-quiz-04">
+    <link rel="stylesheet" href="css/responsive.css?v=faq-quiz-04">
+    <link rel="stylesheet" href="css/portfolio.css?v=faq-quiz-04">
 </head>
-<body data-build="faq-quiz-03">
+<body data-build="faq-quiz-04">
     <a class="skip-link" href="#dossier">Skip to product dossier</a>
     <div class="noise-overlay"></div>
     <div class="tech-grid" id="grid"></div>
@@ -202,15 +202,22 @@
         </section>
     </main>
 
-    <script src="js/cursor.js?v=faq-quiz-03"></script>
-    <script type="module" src="js/hero-video.js?v=faq-quiz-03"></script>
-    <script type="module" src="js/hero-motion.js?v=faq-quiz-03"></script>
-    <script type="module" src="js/dossier.js?v=faq-quiz-03"></script>
-    <script type="module" src="js/collection.js?v=faq-quiz-03"></script>
-    <script type="module" src="js/timeline.js?v=faq-quiz-03"></script>
-    <script type="module" src="js/explore.js?v=faq-quiz-03"></script>
-    <script type="module" src="js/faq-motion.js?v=faq-quiz-03"></script>
-    <script type="module" src="js/finale.js?v=faq-quiz-03"></script>
-    <script src="js/site-motion.js?v=faq-quiz-03"></script>
+    <script src="js/cursor.js?v=faq-quiz-04"></script>
+    <script type="module" src="js/hero-video.js?v=faq-quiz-04"></script>
+    <script type="module" src="js/hero-motion.js?v=faq-quiz-04"></script>
+    <script type="module" src="js/dossier.js?v=faq-quiz-04"></script>
+    <script type="module" src="js/collection.js?v=faq-quiz-04"></script>
+    <script type="module" src="js/timeline.js?v=faq-quiz-04"></script>
+    <script type="module" src="js/explore.js?v=faq-quiz-04"></script>
+    <script type="module" src="js/faq-motion.js?v=faq-quiz-04"></script>
+    <script type="module" src="js/finale.js?v=faq-quiz-04"></script>
+    <script src="js/site-motion.js?v=faq-quiz-04"></script>
+    <script>
+        window.addEventListener("pageshow", (event) => {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+    </script>
 </body>
 </html>
